@@ -90,9 +90,17 @@ section {
   transform: none;
 }
 
-.rv.d1 { transition-delay: 0.12s; }
-.rv.d2 { transition-delay: 0.24s; }
-.rv.d3 { transition-delay: 0.36s; }
+.rv.d1 {
+  transition-delay: 0.12s;
+}
+
+.rv.d2 {
+  transition-delay: 0.24s;
+}
+
+.rv.d3 {
+  transition-delay: 0.36s;
+}
 
 
 /* 03. 표지 */
@@ -105,7 +113,8 @@ section {
 .cover .small-cap {
   font-size: 13px;
   letter-spacing: 0.45em;
-  text-indent: 0.45em;       /* letter-spacing 마지막 글자 보정 */
+  text-indent: 0.45em;
+  /* letter-spacing 마지막 글자 보정 */
   color: var(--gold);
 }
 
@@ -141,7 +150,8 @@ section {
 
 /* 아치형 main 사진 */
 .arch-photo {
-  width: min(100%, 400px);   /* height는 aspect-ratio(4/5)를 따라 폭에 비례해 자동으로 커진다 */
+  width: min(100%, 400px);
+  /* height는 aspect-ratio(4/5)를 따라 폭에 비례해 자동으로 커진다 */
   aspect-ratio: 4 / 5;
   margin: 44px auto 0;
   overflow: hidden;
@@ -215,14 +225,14 @@ section {
 
 .greeting {
   font-family: var(--serif);
-  font-size: 16.5px;
+  font-size: 15px;
   line-height: 2.15;
   text-align: center;
   word-break: keep-all;
   color: var(--ink);
 }
 
-.greeting p + p {
+.greeting p+p {
   margin-top: 30px;
 }
 
@@ -315,7 +325,8 @@ section {
   min-width: 32px;
   height: 32px;
   padding: 0 8px;
-  -webkit-appearance: none;   /* iOS의 native button rendering을 끈다. active 숫자가 안 보이던 문제를 막는다. */
+  -webkit-appearance: none;
+  /* iOS의 native button rendering을 끈다. active 숫자가 안 보이던 문제를 막는다. */
   appearance: none;
   background: var(--card);
   border: 1px solid var(--line);
@@ -340,7 +351,8 @@ section {
   background: var(--rose);
   border-color: var(--rose);
   color: #fff;
-  -webkit-text-fill-color: #fff;   /* iOS: color가 무시돼 숫자가 안 보이던 것 강제 지정 */
+  -webkit-text-fill-color: #fff;
+  /* iOS: color가 무시돼 숫자가 안 보이던 것 강제 지정 */
 }
 
 .gallery-pager .pg-btn:disabled {
@@ -415,7 +427,8 @@ section {
   place-items: center;
   width: 46px;
   height: 46px;
-  background: rgba(0, 0, 0, 0.55);              /* 시인성↑: 어두운 알약 + 밝은 테두리 */
+  background: rgba(0, 0, 0, 0.55);
+  /* 시인성↑: 어두운 알약 + 밝은 테두리 */
   border: 1.5px solid rgba(255, 255, 255, 0.7);
   border-radius: 50%;
   color: #fff;
@@ -427,20 +440,50 @@ section {
   transition: background 0.2s, transform 0.15s;
 }
 
-.lightbox button:hover  { background: rgba(0, 0, 0, 0.78); }
-.lightbox button:active { transform: scale(0.93); }
+.lightbox button:hover {
+  background: rgba(0, 0, 0, 0.78);
+}
+
+.lightbox button:active {
+  transform: scale(0.93);
+}
 
 /* 닫기는 상단에, 이전과 다음 화살표는 사진 좌우 끝에 약간 투명하게 둔다.
    닫기(✕)는 너무 커 보이지 않게 화살표보다 작게(34px) 줄였다. */
-.lightbox .lb-close { top: 14px; right: 14px; width: 34px; height: 34px; font-size: 16px; }
-.lightbox .lb-prev, .lightbox .lb-next { top: 50%; bottom: auto; transform: translateY(-50%); opacity: 0.55; }
-.lightbox .lb-prev  { left: 10px; }
-.lightbox .lb-next  { right: 10px; }
-.lightbox .lb-prev:active, .lightbox .lb-next:active { transform: translateY(-50%) scale(0.93); }
+.lightbox .lb-close {
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  font-size: 16px;
+}
+
+.lightbox .lb-prev,
+.lightbox .lb-next {
+  top: 50%;
+  bottom: auto;
+  transform: translateY(-50%);
+  opacity: 0.55;
+}
+
+.lightbox .lb-prev {
+  left: 10px;
+}
+
+.lightbox .lb-next {
+  right: 10px;
+}
+
+.lightbox .lb-prev:active,
+.lightbox .lb-next:active {
+  transform: translateY(-50%) scale(0.93);
+}
 
 /* 가로/짧은 화면(세로 여백 부족): 사진을 더 줄여 하단 button과 겹치지 않게 */
 @media (max-height: 600px) {
-  .lightbox img { max-height: 62vh; }
+  .lightbox img {
+    max-height: 62vh;
+  }
 }
 
 
@@ -566,8 +609,15 @@ section {
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(189, 93, 124, 0.14); }
-  50%      { box-shadow: 0 0 0 8px rgba(189, 93, 124, 0.08); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(189, 93, 124, 0.14);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(189, 93, 124, 0.08);
+  }
 }
 
 
@@ -684,7 +734,9 @@ section {
   background: var(--card);
 }
 
-.map-embed .map-note { display: none; }
+.map-embed .map-note {
+  display: none;
+}
 
 .map-embed.is-fallback {
   display: flex;
@@ -719,7 +771,7 @@ details.gift {
   border-radius: 14px;
 }
 
-details.gift + details.gift {
+details.gift+details.gift {
   margin-top: 12px;
 }
 
@@ -761,13 +813,14 @@ details.gift .acc-list {
   font-size: 15px;
 }
 
-.acc + .acc {
+.acc+.acc {
   border-top: 1px dashed var(--line-soft);
 }
 
 .acc .nm {
   flex: none;
-  width: 48px;   /* 이름 3자 폭에 맞춰 줄여서 이름과 계좌정보 사이 공백을 좁힌다 */
+  width: 48px;
+  /* 이름 3자 폭에 맞춰 줄여서 이름과 계좌정보 사이 공백을 좁힌다 */
   font-weight: 400;
   color: var(--ink);
 }
@@ -834,7 +887,9 @@ details.gift .acc-list {
   text-align: center;
 }
 
-.bless-input::placeholder { color: var(--soft); }
+.bless-input::placeholder {
+  color: var(--soft);
+}
 
 .bless-input:focus {
   outline: none;
@@ -925,16 +980,24 @@ details.gift .acc-list {
 .bless-log .bl-lines {
   max-height: 168px;
   overflow-y: auto;
-  padding-right: 8px;                /* scrollbar와 글자 사이 여백 */
-  overscroll-behavior: contain;      /* 끝까지 내려도 page가 따라 밀리지 않게 */
-  -webkit-overflow-scrolling: touch; /* iOS 관성 scroll */
+  padding-right: 8px;
+  /* scrollbar와 글자 사이 여백 */
+  overscroll-behavior: contain;
+  /* 끝까지 내려도 page가 따라 밀리지 않게 */
+  -webkit-overflow-scrolling: touch;
+  /* iOS 관성 scroll */
   scrollbar-width: thin;
   scrollbar-color: var(--rose-soft) transparent;
 }
 
 /* 기본 회색 막대가 종이 톤을 깨서 scrollbar도 theme 색으로 */
-.bless-log .bl-lines::-webkit-scrollbar { width: 4px; }
-.bless-log .bl-lines::-webkit-scrollbar-track { background: transparent; }
+.bless-log .bl-lines::-webkit-scrollbar {
+  width: 4px;
+}
+
+.bless-log .bl-lines::-webkit-scrollbar-track {
+  background: transparent;
+}
 
 .bless-log .bl-lines::-webkit-scrollbar-thumb {
   background: var(--rose-soft);
@@ -948,7 +1011,7 @@ details.gift .acc-list {
   overflow-wrap: anywhere;
 }
 
-.bless-log .bl-line + .bl-line {
+.bless-log .bl-line+.bl-line {
   margin-top: 7px;
 }
 
@@ -1105,8 +1168,15 @@ footer .share-btn {
   transition: background 0.25s, border-color 0.25s, color 0.25s, transform 0.15s;
 }
 
-footer .share-btn:hover { background: var(--rose); border-color: var(--rose); color: #fff; }
-footer .share-btn:active { transform: scale(0.97); }
+footer .share-btn:hover {
+  background: var(--rose);
+  border-color: var(--rose);
+  color: #fff;
+}
+
+footer .share-btn:active {
+  transform: scale(0.97);
+}
 
 
 /* 12. 반응형 & 접근성 */
@@ -1122,6 +1192,7 @@ footer .share-btn:active { transform: scale(0.97); }
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -1170,7 +1241,9 @@ footer .share-btn:active { transform: scale(0.97); }
 }
 
 /* 종이 질감(noise)을 없애 맑고 모던하게 */
-body::before { display: none; }
+body::before {
+  display: none;
+}
 
 /* 본문 card. 얇은 웜 hairline을 데스크톱에서만 은은하게 준다. */
 .paper {
@@ -1182,11 +1255,13 @@ body::before { display: none; }
 /* 표지: 여백을 더 넓히고 디스플레이 명조로 */
 
 .cover {
-  padding: 52px 26px 56px;   /* WEDDING INVITATION 위 공백을 줄인다 */
+  padding: 52px 26px 56px;
+  /* WEDDING INVITATION 위 공백을 줄인다 */
 }
 
 .cover .small-cap {
-  font-size: 12px;           /* invitation 문구를 작게 */
+  font-size: 12px;
+  /* invitation 문구를 작게 */
   letter-spacing: 0.5em;
   text-indent: 0.5em;
   color: var(--gold);
@@ -1195,7 +1270,8 @@ body::before { display: none; }
 .cover h1 {
   margin-top: 26px;
   font-family: var(--display);
-  font-size: 40px;           /* 표지 제목을 크게 */
+  font-size: 40px;
+  /* 표지 제목을 크게 */
   font-weight: 400;
   letter-spacing: 0.18em;
   text-indent: 0.18em;
@@ -1217,7 +1293,8 @@ body::before { display: none; }
 }
 
 .arch-photo {
-  margin-top: 28px;          /* 아치 사진과 예식장 문구 사이 공백을 줄인다 */
+  margin-top: 28px;
+  /* 아치 사진과 예식장 문구 사이 공백을 줄인다 */
   border-color: var(--line);
   box-shadow: 0 26px 54px -30px rgba(120, 70, 60, 0.32);
 }
@@ -1234,7 +1311,8 @@ body::before { display: none; }
 .label-title {
   margin-bottom: 30px;
   font-family: var(--display);
-  font-size: 23px;           /* section 타이틀을 크게 */
+  font-size: 23px;
+  /* section 타이틀을 크게 */
   letter-spacing: 0.12em;
   text-indent: 0.12em;
 }
@@ -1291,22 +1369,26 @@ body::before { display: none; }
   aspect-ratio: 4 / 5;
   overflow: hidden;
   border-radius: 16px;
-  background: #f3e6ea;   /* image load 전 배경 */
+  background: #f3e6ea;
+  /* image load 전 배경 */
 }
 
 .pf-photo img {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;         /* frame에 꽉 차게 crop */
-  object-position: 50% 20%;  /* 기본 crop 초점. 개별값은 config.photoFocus로 덮어쓴다. */
+  object-fit: cover;
+  /* frame에 꽉 차게 crop */
+  object-position: 50% 20%;
+  /* 기본 crop 초점. 개별값은 config.photoFocus로 덮어쓴다. */
 }
 
 /* 사진이 없을 때만 쓰는 이니셜. 4:5 box는 그대로 유지한다. */
 .pf-photo.is-empty {
   display: grid;
   place-items: center;
-  background: linear-gradient(150deg, #f8ebe9, #f3e6ea);   /* 사진 없을 때만 배경(이니셜) */
+  background: linear-gradient(150deg, #f8ebe9, #f3e6ea);
+  /* 사진 없을 때만 배경(이니셜) */
   font-family: var(--display);
   font-size: 44px;
   color: var(--rose);
@@ -1321,7 +1403,8 @@ body::before { display: none; }
 .pf-role {
   display: inline;
   font-size: 14px;
-  font-weight: 400;   /* Gowun Dodum은 400만 있어 600/700은 가짜 bold로 뭉툭해짐 → 400 유지 */
+  font-weight: 400;
+  /* Gowun Dodum은 400만 있어 600/700은 가짜 bold로 뭉툭해짐 → 400 유지 */
   letter-spacing: 0.02em;
   color: var(--soft);
 }
@@ -1348,7 +1431,8 @@ body::before { display: none; }
 .pf-meta {
   display: flex;
   flex-direction: column;
-  align-items: center;     /* 각 행을 가운데 정렬 */
+  align-items: center;
+  /* 각 행을 가운데 정렬 */
   gap: 5px;
   margin-top: 12px;
 }
@@ -1356,16 +1440,20 @@ body::before { display: none; }
 .pf-row {
   display: flex;
   align-items: baseline;
-  justify-content: center;   /* 행 내용(키+값)을 가운데로 */
-  gap: 6px;                  /* 키와 값 사이 간격 */
+  justify-content: center;
+  /* 행 내용(키+값)을 가운데로 */
+  gap: 6px;
+  /* 키와 값 사이 간격 */
   font-size: 16.5px;
   line-height: 1.6;
 }
 
 .pf-k {
-  flex: none;                /* 키는 글자폭만큼만. 가운데 정렬했을 때 간격이 고르다. */
+  flex: none;
+  /* 키는 글자폭만큼만. 가운데 정렬했을 때 간격이 고르다. */
   font-size: 14.5px;
-  font-weight: 400;   /* 가짜 bold를 피한다. 키와 값 구분은 두께 대신 색으로 준다. */
+  font-weight: 400;
+  /* 가짜 bold를 피한다. 키와 값 구분은 두께 대신 색으로 준다. */
   letter-spacing: 0.04em;
   color: var(--soft);
 }
@@ -1396,9 +1484,17 @@ body::before { display: none; }
 }
 
 @media (max-width: 360px) {
-  .profile { gap: 10px; }
-  .pf-name { font-size: 23px; }
-  .pf-photo.is-empty { font-size: 36px; }
+  .profile {
+    gap: 10px;
+  }
+
+  .pf-name {
+    font-size: 23px;
+  }
+
+  .pf-photo.is-empty {
+    font-size: 36px;
+  }
 }
 
 
@@ -1419,22 +1515,34 @@ body::before { display: none; }
 }
 
 @keyframes pulse {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(194, 86, 106, 0.14); }
-  50%      { box-shadow: 0 0 0 8px rgba(194, 86, 106, 0.07); }
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px rgba(194, 86, 106, 0.14);
+  }
+
+  50% {
+    box-shadow: 0 0 0 8px rgba(194, 86, 106, 0.07);
+  }
 }
 
 
 /* button, 축하, lightbox: 톤에 맞춰 보정 */
 
 /* 사진 자리표시. 중립 톤. */
-.g-item     { box-shadow: 0 14px 30px -22px rgba(120, 70, 60, 0.24); }
+.g-item {
+  box-shadow: 0 14px 30px -22px rgba(120, 70, 60, 0.24);
+}
 
 /* gallery 안내 문구를 가독성을 위해 조금 더 진한 색으로 */
-.gallery-hint { color: var(--soft); }
+.gallery-hint {
+  color: var(--soft);
+}
 
 /* 축하 button. 맑은 화이트 알약에 rose를 얹고 크림 gradient은 뺐다. */
 .bless-btn {
-  padding: 13px 30px;        /* '한번 더 축하하기' button을 작게 */
+  padding: 13px 30px;
+  /* '한번 더 축하하기' button을 작게 */
   font-size: 16px;
   background: #ffffff;
   border-color: var(--rose-soft);
@@ -1443,10 +1551,14 @@ body::before { display: none; }
   box-shadow: 0 14px 28px -18px rgba(194, 86, 106, 0.3);
 }
 
-.bless-btn:hover { border-color: var(--rose); }
+.bless-btn:hover {
+  border-color: var(--rose);
+}
 
 /* lightbox 배경. 따뜻한 dark. */
-.lightbox { background: rgba(28, 20, 18, 0.93); }
+.lightbox {
+  background: rgba(28, 20, 18, 0.93);
+}
 
 /* hidden page banner(예식 후 노출). 옅은 sage. */
 .release-banner {
