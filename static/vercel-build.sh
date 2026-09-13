@@ -16,6 +16,9 @@ set -eu
 HERE="$(cd "$(dirname "$0")" && pwd)"
 cd "$HERE"
 
+: "${INVITATION_CONF:=}"
+echo "vercel-build.sh: INVITATION_CONF 길이 = ${#INVITATION_CONF} 자 (값 자체는 출력하지 않습니다)"
+
 if [ -n "${INVITATION_CONF:-}" ]; then
   printf '%s\n' "$INVITATION_CONF" > invitation.conf
 elif [ ! -f invitation.conf ]; then
