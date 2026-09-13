@@ -1,0 +1,5 @@
+{
+  "buildCommand": "bash static/vercel-build.sh",
+  "outputDirectory": "static/dist",
+  "installCommand": "true"
+}

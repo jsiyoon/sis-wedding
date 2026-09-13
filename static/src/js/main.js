@@ -72,9 +72,9 @@ document.getElementById('mainPhoto').appendChild(mainPhotoImg);
 const blessPhotoEl = document.getElementById('blessPhoto');
 if (blessPhotoEl && CONFIG.photos.bless) blessPhotoEl.src = photoSrc(CONFIG.photos.bless);
 
-// gallery. 3x3 pagination이라 한 page에 9장씩 나눠 보여준다.
+// gallery. 3x4 pagination이라 한 page에 12장씩 나눠 보여준다.
 const galleryEl = document.getElementById('gallery');
-const GALLERY_PAGE = 9;   // 3x3, 한 page 9장
+const GALLERY_PAGE = 12;   // 3x4, 한 page 12장
 
 // main(main) version의 page 순서로 재배열한 gallery. config.js의 orderedGallery가 page 단위로 옮긴다.
 const GALLERY = orderedGallery((CONFIG.photos.galleryPageOrder || {}).main);

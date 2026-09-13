@@ -208,16 +208,16 @@ function kv(key, val, keyWidth = 7) {
   return `<span class="k">${key.padEnd(keyWidth)}</span>: <span class="v">${esc(val)}</span>`;
 }
 
-/** 좌측 ASCII 로고 + 우측 정보 줄을 나란히 합칩니다 (로고는 ASCII라 폭 고정) */
-function sideBySide(logo, info, logoWidth = 13) {
+/** 좌측 ASCII 로고 + 우측 정보 줄을 나란히 합칩니다 */
+function sideBySide(logo, info) {
   const rows = Math.max(logo.length, info.length);
   const out = [];
   for (let i = 0; i < rows; i++) {
-    const l = (logo[i] || '').padEnd(logoWidth);
+    const l = logo[i] || '';
     const r = info[i] || '';
-    out.push(`<span class="logo">${l}</span>${r}`);
+    out.push(`<span class="fetch-row"><span class="logo">${l}</span><span class="info">${r}</span></span>`);
   }
-  return out.join('\n');
+  return out.join('');
 }
 
 (function renderFetch() {
@@ -225,15 +225,15 @@ function sideBySide(logo, info, logoWidth = 13) {
 
   const logo = [
     '・♡。　 　 。♡・',
-    '♡゜　  ﾟ♡゜　　ﾟ♡',
-    ' ♡*　　　　　　♡*',
-    '   ♡        ♡　 ',
+    '♡゜　  ﾟ♡　　ﾟ♡  ',
+    ' ♡*　　　　　♡*  ',
+    '   ♡       ♡　  ',
     '　　 ♡;　;♡　　 ',
     '　　　　♡゜　　　',
   ];
 
   const info = [
-    '<span class="v">guest</span>@<span class="v">wedding</span>',
+    '<span class="v">dearest</span>@<span class="v">wedding</span>',
     '─────────────────────',
     kv('host', [CONFIG.venue.name, CONFIG.venue.hall].filter(Boolean).join(' ')),
     kv('date', `${W.getFullYear()}-${pad(W.getMonth() + 1)}-${pad(W.getDate())} (${DAY_EN[W.getDay()]})`),

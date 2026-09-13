@@ -146,13 +146,13 @@ function invAsset(path) {
   return base + '/' + String(path || '').replace(/^\/+/, '');
 }
 
-/* gallery page 재배열. CONFIG.photos.gallery(평면 배열)를 9장 단위로 나눈 뒤
+/* gallery page 재배열. CONFIG.photos.gallery(평면 배열)를 12장 단위로 나눈 뒤
    version별 order(1-indexed page 번호 배열)대로 이어붙여 돌려준다.
    order가 없으면 원래 순서 그대로다.
    예) order=[1,3,2,4] 이면 1, 3, 2, 4page 순서로 표시한다.
    index는 main 순서를, developer는 dev 순서를 쓴다. */
 function orderedGallery(order) {
-  var P = 9;
+  var P = 12;
   var all = (CONFIG.photos && CONFIG.photos.gallery) || [];
   var pages = [];
   for (var i = 0; i < all.length; i += P) pages.push(all.slice(i, i + P));

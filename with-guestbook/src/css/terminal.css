@@ -303,9 +303,24 @@ section { padding: 30px 0 6px; }
 .photo-cap b { color: var(--cyan); }
 
 /* neofetch / struct 색상 */
+.fetch .fetch-row {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
 .fetch .k { color: var(--accent); }
 .fetch .v { color: var(--fg-bright); }
-.fetch .logo { color: var(--rose); text-shadow: 0 0 9px rgba(255, 120, 160, 0.5); }
+.fetch .logo {
+  color: var(--rose);
+  text-shadow: 0 0 9px rgba(255, 120, 160, 0.5);
+  display: inline-block;
+  flex-shrink: 0;
+  width: 20ch;
+  white-space: pre;
+}
+.fetch .info {
+  white-space: pre;
+}
 .fetch .dim,
 .fetch .c { color: var(--fg-dim); }
 

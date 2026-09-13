@@ -55,6 +55,10 @@ Windows 에서는 `.\build.ps1` 과 `.\startup.ps1` 을 씁니다. 같은 `invit
 `dist/` 가 나오면 GitHub Pages나 Cloudflare Pages, S3 같은 정적 호스팅에 그대로 올립니다.
 대개 무료입니다.
 
+**Vercel** 은 root의 `vercel.json` 덕분에 GitHub 저장소만 연결하면 자동으로 build됩니다.
+`dist/` 를 미리 만들 필요가 없습니다. 자세한 절차는
+[static/README.md의 Vercel 절](static/README.md#vercel-github-연동-자동-build)을 참고해 주시기 바랍니다.
+
 이 구성에는 축하 한마디를 저장할 곳이 없습니다. 그래서 **축하 한마디 입력창과 기록 목록이
 아예 나오지 않습니다.** 남길 수 없는 것을 남길 수 있는 것처럼 보여 주지 않으려는 것입니다.
 developer version과 terminal version의 AI agent 축하는 저장이 필요 없으므로 그대로 나옵니다.
@@ -100,9 +104,11 @@ GUESTBOOK_API_BASE="https://guestbook.example.com/api"
 .
 ├── README.md                 이 파일
 ├── LICENSE                   MIT
+├── vercel.json                Vercel이 static/ 을 자동 build하도록 하는 설정
 ├── static/                   구성 1. HTML, CSS, JS 만
 │   ├── README.md
 │   ├── build.sh              invitation.conf 를 읽어 src/ 를 dist/ 로 변환합니다
+│   ├── vercel-build.sh       Vercel build 진입점. INVITATION_CONF 환경변수로 conf를 만든 뒤 build.sh 를 부릅니다
 │   ├── startup.sh            dist/ 를 local에서 미리 봅니다
 │   ├── build.ps1             build.sh 의 Windows 판
 │   ├── startup.ps1           startup.sh 의 Windows 판

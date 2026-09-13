@@ -263,6 +263,26 @@ aws s3 sync dist/ s3://my-bucket/ --delete
 git subtree push --prefix static/dist origin gh-pages
 ```
 
+### Vercel (GitHub 연동, 자동 build)
+
+이 저장소 root에 `vercel.json` 이 있어 GitHub 저장소를 그대로 연결하면 Vercel이
+`static/` 을 자동으로 build합니다. `dist/` 를 미리 만들어 올릴 필요가 없습니다.
+
+1. Vercel 대시보드에서 **Add New > Project** 로 이 GitHub 저장소를 가져옵니다.
+2. Framework Preset은 **Other** 로 두고, Root Directory는 저장소 root 그대로 둡니다.
+   (`vercel.json` 이 build 명령과 출력 경로를 이미 지정해 둡니다.)
+3. **Settings > Environment Variables** 에 `INVITATION_CONF` 라는 이름으로 변수를 추가합니다.
+   값에는 로컬에서 쓰던 `invitation.conf` 파일 내용을 **그대로 전체 복사해서 붙여넣습니다.**
+   이 값은 Vercel에만 저장되고 git에는 올라가지 않습니다.
+4. **Deploy** 를 누릅니다. `static/vercel-build.sh` 가 그 환경변수 값으로 `invitation.conf` 를
+   만들고 `build.sh` 를 돌려 `dist/` 를 배포합니다.
+
+`invitation.conf` 내용을 고칠 때마다 `INVITATION_CONF` 값을 갱신하고 **Redeploy** 를 눌러야
+반영됩니다. (git push만으로는 반영되지 않습니다. conf가 git에 없기 때문입니다.)
+
+Vercel이 배정한 domain(또는 연결한 custom domain)이 정해지면 `INVITATION_CONF` 안의
+`SITE_ORIGIN` 도 그 주소로 맞춰 두어야 카카오 공유 card의 사진이 나옵니다.
+
 ### 올린 뒤 확인할 것
 
 1. `SITE_ORIGIN` 이 실제 주소와 같은지. 다르면 카카오 공유 card의 사진이 안 나옵니다.
