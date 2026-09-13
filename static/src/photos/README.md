@@ -16,7 +16,7 @@ PHOTO_GALLERY="g01.jpg,g02.jpg,g03.jpg,g04.jpg,g05.jpg,g06.jpg,g07.jpg,g08.jpg,g
 
 ## 알아 두실 것
 
-- **gallery는 3x4 pagination이라 12장이 한 page입니다.** 12의 배수로 넣으면 마지막 page가 비지 않습니다.
+- **gallery는 3x3 pagination이라 9장이 한 page입니다.** 9의 배수로 넣으면 마지막 page가 비지 않습니다.
   terminal version에는 gallery가 없습니다.
 - **표지 사진은 세로 4:5 를 기준으로 crop됩니다.** 얼굴 위치가 어긋나면 `invitation.conf` 의
   `GROOM_PHOTO_FOCUS` 와 `BRIDE_PHOTO_FOCUS` 로 초점을 옮깁니다. CSS `object-position` 값입니다.

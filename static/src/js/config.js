@@ -152,7 +152,7 @@ function invAsset(path) {
    예) order=[1,3,2,4] 이면 1, 3, 2, 4page 순서로 표시한다.
    index는 main 순서를, developer는 dev 순서를 쓴다. */
 function orderedGallery(order) {
-  var P = 12;
+  var P = 9;
   var all = (CONFIG.photos && CONFIG.photos.gallery) || [];
   var pages = [];
   for (var i = 0; i < all.length; i += P) pages.push(all.slice(i, i + P));
