@@ -100,9 +100,10 @@ VENUE_SUBWAY="1호선과 2호선 시청역"
 VENUE_SUBWAY_SHORT="1호선 / 2호선 시청역"
 
 # 지도에 찍을 좌표와 확대 수준입니다.
+# VENUE_MAP_ZOOM은 카카오맵의 level 값입니다. 숫자가 작을수록 확대됩니다(보통 1~4).
 VENUE_LAT="37.5662952"
 VENUE_LNG="126.9779451"
-VENUE_MAP_ZOOM="17"
+VENUE_MAP_ZOOM="3"
 
 # 길찾기 button이 여는 외부 지도 link입니다.
 MAP_NAVER_URL="https://map.naver.com/"
@@ -156,21 +157,17 @@ BRIDE_ACCOUNTS="최엥에|달빛은행|000-0000-0000,최민수|달빛은행|000-
 
 
 # --- 외부 서비스 key ---
-# 둘 다 domain 제한 공개key라 browser에 노출돼도 되는 값입니다. 비워도 화면은 정상 동작합니다.
+# domain 제한 공개key라 browser에 노출돼도 되는 값입니다. 비워도 화면은 정상 동작합니다.
 # 발급과 domain 등록 절차는 README.md 에 적어 두었습니다.
 
-# 네이버 지도 key입니다. NCP 콘솔의 Maps 애플리케이션에 있는 ncpKeyId(Web Dynamic Map)입니다.
-#   - ncpKeyId 하나만 넣습니다. Client Secret 은 server 전용이라 절대 넣지 않습니다.
-#   - 비우면 지도 대신 안내 문구가 나오고 길찾기 button은 그대로 동작합니다.
-#   - 주의: NCP Maps 애플리케이션의 'Web 서비스 URL'에 배포 domain을 등록해야 지도가 나옵니다.
-NAVER_MAP_KEY_ID=""
-
-# 카카오 공유 key입니다. Kakao Developers 앱의 JavaScript key입니다.
-#   - 이 key가 있어야 카카오톡에서 공유하기가 친구 선택창까지 열리고 미리보기 card가 나옵니다.
-#     비우면 navigator.share 나 link 복사로 fallback합니다.
+# 카카오 key입니다. Kakao Developers 앱의 JavaScript key이고, 두 가지에 함께 쓰입니다.
+#   1) 카카오톡 공유하기: 이 key가 있어야 친구 선택창까지 열리고 미리보기 card가 나옵니다.
+#      비우면 navigator.share 나 link 복사로 fallback합니다.
+#   2) 예식장 위치 지도(카카오맵) embed: 이 key가 있어야 '오시는 길'에 지도가 뜹니다.
+#      비우면 지도 대신 안내 문구가 나오고 길찾기 button은 그대로 동작합니다.
 #   - JavaScript key만 넣습니다. REST API key와 Admin key는 server 전용 비밀입니다.
 #   - 주의: domain을 두 군데에 등록해야 합니다. 한 곳만 하면 공유 호출이 거절됩니다.
-#     [플랫폼 키 > JavaScript 키 > JavaScript SDK 도메인] 은 Kakao.init 을 실행하는 쪽입니다.
+#     [플랫폼 키 > JavaScript 키 > JavaScript SDK 도메인] 은 Kakao.init 과 지도 SDK를 실행하는 쪽입니다.
 #     [제품 링크 관리 > 웹 도메인] 은 공유 card를 눌렀을 때 이동할 쪽입니다.
 KAKAO_JS_KEY=""
 

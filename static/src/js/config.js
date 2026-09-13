@@ -71,14 +71,15 @@ const CONFIG = {
   // terminal version의 struct person card가 쓰는 원본(부모, 서열, 직업까지)
   people: { groom: WDATA.groom || {}, bride: WDATA.bride || {} },
 
-  // 네이버 지도 embed. key(ncpKeyId)는 invitation.conf 의 NAVER_MAP_KEY_ID 에 넣는다.
-  //   window.__NAVER_MAP_KEY__ 로 심어지므로 아래 keyId는 늘 비워 둔다.
+  // 카카오맵 embed. key(JavaScript 키)는 '카카오톡 공유하기'와 같은 것을 그대로 쓴다.
+  //   invitation.conf 의 KAKAO_JS_KEY 가 window.__KAKAO_KEY__ 로 심어지므로 아래 keyId는 늘 비워 둔다.
   //   key가 없으면 지도 대신 안내 문구가 보이고, 길찾기 button은 그대로 동작한다.
-  naverMap: {
+  //   zoom은 카카오맵의 level 값이다. 숫자가 작을수록 확대된다 (네이버 지도와 반대 방향).
+  venueMap: {
     keyId: '',
     lat: WV.lat || 0,
     lng: WV.lng || 0,
-    zoom: WV.zoom || 17,
+    zoom: WV.zoom || 3,
     label: [WV.name, WV.hall].filter(Boolean).join(' '),
   },
 };
@@ -575,49 +576,57 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 
-/* 네이버 지도 embed. main과 개발자 version의 '오시는 길'에서 쓴다.
-   #naverMap 요소가 있고 키가 설정돼 있을 때만 지도를 그린다.
+/* 카카오맵 embed. main과 개발자 version의 '오시는 길'에서 쓴다.
+   #venueMap 요소가 있고 키가 설정돼 있을 때만 지도를 그린다.
    키가 없거나 load에 실패하면 container에 .is-fallback을 붙여 안내 문구(.map-note)를 노출하고,
-   네이버 지도와 카카오맵 길찾기 button으로 유도한다. */
-function initNaverMap() {
-  var box = document.getElementById('naverMap');
+   네이버 지도와 카카오맵 길찾기 button으로 유도한다.
+   key는 '카카오톡 공유하기'(initKakaoShare)와 같은 JavaScript 키를 그대로 쓴다.
+   다만 SDK는 다르다. 공유는 kakao.min.js, 지도는 dapi.kakao.com/v2/maps/sdk.js 로 따로 부른다. */
+function initKakaoMap() {
+  var box = document.getElementById('venueMap');
   if (!box) return;
-  var cfg = CONFIG.naverMap || {};
-  // 키(ncpKeyId)는 invitation.conf 의 NAVER_MAP_KEY_ID 가 window.__NAVER_MAP_KEY__ 로 주입된다.
-  // 없으면 아래 cfg.keyId로 fallback하는데 그쪽은 늘 비어 있다.
-  var keyId = (typeof window !== 'undefined' && window.__NAVER_MAP_KEY__) || cfg.keyId || '';
+  var cfg = CONFIG.venueMap || {};
+  var key = (typeof window !== 'undefined' && window.__KAKAO_KEY__) || cfg.keyId || '';
   function fallback() { box.classList.add('is-fallback'); }
-  if (!keyId) { fallback(); return; }
+  if (!key) { fallback(); return; }
 
+  function draw() {
+    // domain이 Kakao Developers에 등록돼 있지 않으면 SDK가 alert()로 막는다.
+    // 깨진 지도 대신 안내 문구로 조용히 떨어지도록 그 alert를 가로챈다.
+    var originalAlert = window.alert;
+    window.alert = function () { fallback(); };
+    try {
+      if (!window.kakao || !kakao.maps || !kakao.maps.Map) { fallback(); return; }
+      var pos = new kakao.maps.LatLng(cfg.lat, cfg.lng);
+      box.innerHTML = '';                          // 안내 문구를 지운 뒤 지도를 그린다
+      var map = new kakao.maps.Map(box, {
+        center: pos,
+        level: cfg.zoom || 3,                       // 숫자가 작을수록 확대된다
+      });
+      map.setDraggable(false);                      // drag(패닝) 잠금. 약도가 손으로 안 움직이게.
+      map.setZoomable(false);                        // scroll·pinch·더블클릭 zoom 잠금
+      new kakao.maps.Marker({ position: pos, map: map, title: cfg.label || '' });
+    } catch (e) {
+      fallback();
+    } finally {
+      window.alert = originalAlert;
+    }
+  }
+
+  if (window.kakao && window.kakao.maps && window.kakao.maps.Map) { draw(); return; }
+  if (document.getElementById('kakao-maps-sdk')) return;   // 이미 load 중
   var s = document.createElement('script');
-  s.src = 'https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=' +
-          encodeURIComponent(keyId);
-  // 인증에 실패하면(잘못된 키이거나 NCP에 domain이 미등록이면) 네이버 API가 부르는 전역 callback.
-  // 깨진 지도나 빈 지도 대신 안내 문구(.is-fallback)로 떨어지게 한다. 네이버가 권장하는 훅이다.
-  window.navermap_authFailure = fallback;
-
+  s.id = 'kakao-maps-sdk';
+  s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=' +
+          encodeURIComponent(key) + '&autoload=false';
   s.onload = function () {
-    if (!window.naver || !naver.maps) { fallback(); return; }
-    var pos = new naver.maps.LatLng(cfg.lat, cfg.lng);
-    box.innerHTML = '';                          // 안내 문구를 지운 뒤 지도를 그린다
-    var map = new naver.maps.Map(box, {
-      center: pos,
-      zoom: cfg.zoom || 16,
-      scrollWheel: false,                        // page scroll이 지도에 갇히지 않게
-      draggable: false,                          // drag(패닝) 잠금. 약도가 손으로 안 움직이게.
-      pinchZoom: false,                          // pinch zoom 잠금
-      disableDoubleTapZoom: true,                // double tap zoom 잠금
-      disableDoubleClickZoom: true,              // 더블클릭 zoom 잠금
-      disableKineticPan: true,                   // 관성 이동 잠금
-      keyboardShortcuts: false,                  // 키보드 이동 잠금
-    });
-    new naver.maps.Marker({ position: pos, map: map, title: cfg.label || '' });
+    try { kakao.maps.load(draw); } catch (e) { fallback(); }
   };
   s.onerror = fallback;
   document.head.appendChild(s);
 }
 
-document.addEventListener('DOMContentLoaded', initNaverMap);
+document.addEventListener('DOMContentLoaded', initKakaoMap);
 
 
 /* 확대(zoom) 차단. 전 화면 공통.

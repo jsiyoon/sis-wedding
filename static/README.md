@@ -286,7 +286,7 @@ Vercel이 배정한 domain(또는 연결한 custom domain)이 정해지면 `INVI
 ### 올린 뒤 확인할 것
 
 1. `SITE_ORIGIN` 이 실제 주소와 같은지. 다르면 카카오 공유 card의 사진이 안 나옵니다.
-2. 네이버 지도와 카카오 앱에 그 domain을 등록했는지.
+2. Kakao Developers 앱에 그 domain을 등록했는지 (지도와 공유하기 둘 다에 필요합니다).
    [지도와 카카오 공유 key 발급하기](#지도와-카카오-공유-key-발급하기) 를 참고해 주시기 바랍니다.
 3. 휴대폰에서 실제로 열어 보았는지. 청첩장은 거의 전부 모바일로 열립니다.
 
@@ -314,86 +314,28 @@ SITE_ORIGIN="https://user.github.io/repo"
 
 ## 지도와 카카오 공유 key 발급하기
 
-`invitation.conf` 의 두 항목입니다.
+`invitation.conf` 의 한 항목입니다.
 
 ```ini
-NAVER_MAP_KEY_ID=""   # 네이버 지도를 청첩장 안에 띄웁니다
-KAKAO_JS_KEY=""       # 카카오톡 공유하기를 친구 선택창까지 엽니다
+KAKAO_JS_KEY=""   # 예식장 위치 지도(카카오맵)와 카카오톡 공유하기를 함께 켭니다
 ```
 
-**둘 다 비워도 청첩장은 정상 동작합니다.** 지도 자리에는 안내 문구와 길찾기 button이 나옵니다.
+**비워도 청첩장은 정상 동작합니다.** 지도 자리에는 안내 문구와 길찾기 button이 나옵니다.
 공유하기는 문자와 system 공유와 link 복사로 fallback합니다.
 아래는 그보다 더 잘 보이게 하고 싶을 때 읽으시면 됩니다.
 
-두 key 모두 **domain 제한 공개key** 입니다. browser에 그대로 노출되는 것이 정상입니다.
+이 key는 **domain 제한 공개key** 입니다. browser에 그대로 노출되는 것이 정상입니다.
 등록한 domain 밖에서는 동작하지 않아 남이 가져가도 쓸 수 없습니다.
 그래서 `invitation.conf` 에 두어도 됩니다. 다만 그 파일 자체는 계좌번호 때문에 commit하지 않습니다.
 
-### 1. 네이버 지도 (NAVER_MAP_KEY_ID)
+### 1. 카카오 키 (KAKAO_JS_KEY) — 지도와 공유하기를 함께 켭니다
 
-'오시는 길' section에 지도를 띄웁니다. main version과 developer version에 나옵니다
-(terminal version에는 지도가 없습니다).
+Kakao Developers 앱의 **JavaScript 키** 하나로 두 가지가 함께 동작합니다.
 
-#### 발급 절차
-
-1. <a href="https://www.ncloud.com" target="_blank" rel="noopener noreferrer">NAVER Cloud Platform</a> 에 가입하고 로그인합니다.
-   **결제수단 등록이 필요합니다.** 지도는 월 무료 한도가 넉넉해서 청첩장 규모로는
-   요금이 나오지 않습니다. 다만 카드 등록은 해야 합니다.
-2. 콘솔에서 **Services > Application Services > Maps** 로 들어갑니다.
-3. **Application 등록** 을 누릅니다.
-4. **Application 이름** 을 적습니다. 아무 이름이나 괜찮습니다. 예: `wedding-invitation`
-5. **Service 선택** 에서 **Web Dynamic Map** 을 체크합니다.
-   - Static Map, Geocoding, Directions 는 필요하지 않습니다. server용이고 청첩장은 쓰지 않습니다.
-6. **Web 서비스 URL** 에 청첩장을 올릴 주소를 등록합니다. **이 단계를 빼면 지도가 표시되지 않습니다.**
-   ```
-   https://invitation.example.com
-   http://localhost:8080
-   ```
-   - `http://localhost:8080` 은 local에서 미리 볼 때 필요합니다. port를 바꿔 쓰면 그 port로 적습니다.
-   - 경로(`/main.html`)는 적지 않습니다. origin까지만 적습니다.
-   - 나중에 domain이 정해지면 여기 와서 추가하면 됩니다. 여러 개를 등록할 수 있습니다.
-7. 등록을 마치면 **인증 정보** 에서 **Client ID** 를 복사합니다.
-   화면에 따라 `ncpKeyId` 라고 표시됩니다.
-
-#### 적기
-
-```ini
-NAVER_MAP_KEY_ID="여기에_Client_ID"
-VENUE_LAT="37.5662952"
-VENUE_LNG="126.9779451"
-VENUE_MAP_ZOOM="17"
-```
-
-좌표는 <a href="https://map.naver.com" target="_blank" rel="noopener noreferrer">네이버 지도</a> 에서 확인합니다.
-예식장을 검색해 URL의 숫자를 보거나 장소를 우클릭하면 됩니다.
-좌표를 안 넣으면 지도가 엉뚱한 곳을 가리킵니다.
-
-#### 주의: Client Secret 은 넣지 않습니다
-
-NCP는 Client ID와 Client Secret을 함께 줍니다. **Secret 은 절대 넣지 않습니다.**
-server 전용 비밀이고, browser에 노출되면 남이 대신 호출해 요금을 발생시킬 수 있습니다.
-청첩장은 Client ID 하나만 씁니다.
-
-#### 지도가 표시되지 않을 때
-
-| 증상 | 원인 |
-|---|---|
-| 지도 자리에 안내 문구만 나옵니다 | key가 비었거나 Web 서비스 URL에 지금 domain이 없습니다 |
-| console에 인증 실패가 표시됩니다 | Web 서비스 URL과 실제 주소가 다릅니다. `www` 유무와 http, https 까지 정확히 맞춰야 합니다 |
-| local에서만 표시되지 않습니다 | `http://localhost:<port>` 를 등록하지 않았습니다 |
-
-청첩장은 인증이 실패하면 깨진 지도 대신 안내 문구를 보여 주도록 만들어 두었습니다.
-그래도 길찾기 button은 동작하므로 하객이 곤란해지지는 않습니다.
-
----
-
-### 2. 카카오톡 공유 (KAKAO_JS_KEY)
-
-공유하기 button의 '카카오톡으로 공유하기' 를 제대로 동작하게 합니다.
-
-- **key가 있으면** 친구 선택창이 바로 열립니다. 사진과 제목이 담긴 미리보기 card가 갑니다.
-- **key가 없으면** system 공유(`navigator.share`)나 link 복사로 fallback합니다.
-  카카오톡 in-app browser 안에서는 이 fallback이 어색하게 동작할 수 있습니다.
+- **예식장 위치 지도**: '오시는 길' section에 카카오맵을 띄웁니다. main version과
+  developer version에 나옵니다 (terminal version에는 지도가 없습니다).
+- **카카오톡으로 공유하기**: 공유하기 button을 누르면 친구 선택창이 바로 열립니다.
+  key가 없으면 system 공유(`navigator.share`)나 link 복사로 fallback합니다.
   하객 대부분이 카카오톡으로 청첩장을 받으므로 이 key는 넣는 편이 좋습니다.
 
 #### 발급 절차
@@ -404,10 +346,10 @@ server 전용 비밀이고, browser에 노출되면 남이 대신 호출해 요�
 3. 앱 이름과 사업자명을 적습니다. 개인이면 본인 이름을 적으면 됩니다.
 4. 만들어진 앱에 들어가 **앱 키** 메뉴에서 **JavaScript 키** 를 복사합니다.
 5. **도메인을 두 군데에 등록합니다.** 카카오가 목록을 둘로 나눠 두었습니다.
-   한 곳만 채우면 SDK는 load되고 `Kakao.init` 도 지나가는데 마지막 공유 호출이 거절됩니다.
+   한 곳만 채우면 SDK는 load되지만 지도 인증과 공유 호출이 거절됩니다.
    - `[앱] > [플랫폼 키] > [JavaScript 키] > [JavaScript SDK 도메인]`
-     `Kakao.init` 을 실행하는 쪽입니다. 카카오 문서가 "JavaScript 키는 등록된 JavaScript SDK
-     도메인에서만 사용할 수 있으며, 이외에서의 요청은 거절됩니다" 라고 적어 둔 목록입니다.
+     `Kakao.init` 과 카카오맵 SDK를 실행하는 쪽입니다. 카카오 문서가 "JavaScript 키는 등록된
+     JavaScript SDK 도메인에서만 사용할 수 있으며, 이외에서의 요청은 거절됩니다" 라고 적어 둔 목록입니다.
    - `[앱] > [제품 링크 관리] > [웹 도메인]`
      공유 card를 눌렀을 때 이동할 쪽입니다.
 
@@ -419,22 +361,42 @@ server 전용 비밀이고, browser에 노출되면 남이 대신 호출해 요�
    ```
 
    JavaScript 키가 여러 개면 목록도 키마다 따로입니다. 실제로 쓰는 키 아래에 넣어야 합니다.
-6. 카카오 로그인은 **켜지 않아도 됩니다.** 공유하기(`Kakao.Share.sendDefault`)는 로그인이 필요 없습니다.
+6. 카카오 로그인은 **켜지 않아도 됩니다.** 지도와 공유하기(`Kakao.Share.sendDefault`)는
+   로그인이 필요 없습니다.
 
 #### 적기
 
 ```ini
 KAKAO_JS_KEY="여기에_JavaScript_키"
 SITE_ORIGIN="https://invitation.example.com"
+VENUE_LAT="37.5662952"
+VENUE_LNG="126.9779451"
+VENUE_MAP_ZOOM="3"
 ```
 
 `SITE_ORIGIN` 을 반드시 함께 채웁니다. 공유 card의 사진(`og:image`)은 절대 URL이어야
 카카오톡이 읽습니다. 이 값이 비면 사진 없는 card가 갑니다.
 
+좌표는 <a href="https://map.naver.com" target="_blank" rel="noopener noreferrer">네이버 지도</a> 나
+<a href="https://map.kakao.com" target="_blank" rel="noopener noreferrer">카카오맵</a> 에서
+예식장을 검색해 확인합니다. 좌표를 안 넣으면 지도가 엉뚱한 곳을 가리킵니다.
+`VENUE_MAP_ZOOM` 은 카카오맵의 level 값이라 **숫자가 작을수록 확대** 됩니다 (보통 1~4).
+
 #### 주의: REST API 키와 Admin 키는 넣지 않습니다
 
 앱 키 화면에는 Native, REST API, JavaScript, Admin 키가 함께 있습니다.
 **JavaScript 키만** 씁니다. 나머지는 server 전용 비밀입니다.
+
+#### 지도가 표시되지 않을 때
+
+| 증상 | 원인 |
+|---|---|
+| 지도 자리에 안내 문구만 나옵니다 | key가 비었거나 `JavaScript SDK 도메인` 에 지금 주소가 없습니다 |
+| 지도를 그리려다 alert 창이 잠깐 보입니다 | domain 미등록입니다. 청첩장이 그 alert를 가로채 안내 문구로 fallback합니다 |
+| local에서만 표시되지 않습니다 | `http://localhost:<port>` 를 등록하지 않았습니다 |
+
+청첩장은 인증이 실패하면 깨진 지도 대신 안내 문구를 보여 주도록 만들어 두었습니다.
+그래도 길찾기 button은 동작하므로 하객이 곤란해지지는 않습니다.
 
 #### 공유가 동작하지 않을 때
 
@@ -466,7 +428,7 @@ curl -s -o /dev/null -w '%{http_code}\n' https://invitation.example.com/photos/c
 
 ---
 
-### 3. 길찾기 button (key가 필요 없습니다)
+### 2. 길찾기 button (key가 필요 없습니다)
 
 지도 아래 '네이버 지도' 와 '카카오맵' button은 외부 앱을 열기만 하므로 key가 필요 없습니다.
 공유 link만 넣으면 됩니다.
@@ -483,7 +445,7 @@ MAP_KAKAO_URL="https://place.map.kakao.com/xxxxxxxxx"
 
 ---
 
-### 4. 방문 통계 (GA_MEASUREMENT_ID)
+### 3. 방문 통계 (GA_MEASUREMENT_ID)
 
 Google Analytics 4 측정 ID입니다. GA4 속성의 데이터 스트림에서 `G-` 로 시작하는 값을 복사합니다.
 
@@ -505,8 +467,7 @@ GA_MEASUREMENT_ID="G-XXXXXXXXXX"
 
 | 항목 | 필수 | 비용 | 등록해야 하는 것 |
 |---|---|---|---|
-| `NAVER_MAP_KEY_ID` | 아니오 | 카드 등록 필요, 청첩장 규모는 무료 | Web 서비스 URL |
-| `KAKAO_JS_KEY` | 아니오. 넣는 편이 좋습니다 | 없음 | JavaScript SDK 도메인과 웹 도메인 두 곳 |
+| `KAKAO_JS_KEY` | 아니오. 넣는 편이 좋습니다 | 없음 | JavaScript SDK 도메인과 웹 도메인 두 곳 (지도와 공유하기 공용) |
 | `MAP_NAVER_URL` | 아니오 | 없음 | 없음 |
 | `MAP_KAKAO_URL` | 아니오 | 없음 | 없음 |
 | `GA_MEASUREMENT_ID` | 아니오 | 없음 | GA4 속성과 데이터 스트림 |

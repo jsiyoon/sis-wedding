@@ -388,7 +388,7 @@ WEDDING_JSON="$(printf '%s' \
 \"address\":$(json_str "${VENUE_ADDRESS:-}"),\"floor\":$(json_str "${VENUE_FLOOR:-}"),\
 \"addressCopy\":$(json_str "${VENUE_ADDRESS_COPY:-}"),\"subway\":$(json_str "${VENUE_SUBWAY:-}"),\
 \"subwayShort\":$(json_str "${VENUE_SUBWAY_SHORT:-}"),\"lat\":$(num_or "${VENUE_LAT:-}" 0),\
-\"lng\":$(num_or "${VENUE_LNG:-}" 0),\"zoom\":$(num_or "${VENUE_MAP_ZOOM:-}" 17)},\
+\"lng\":$(num_or "${VENUE_LNG:-}" 0),\"zoom\":$(num_or "${VENUE_MAP_ZOOM:-}" 3)},\
 \"map\":{\"naver\":$(json_str "${MAP_NAVER_URL:-}"),\"kakao\":$(json_str "${MAP_KAKAO_URL:-}")},\
 \"photos\":{\"main\":$(json_str "${PHOTO_MAIN:-}"),\"mainDev\":$(json_str "${PHOTO_MAIN_DEV:-}"),\
 \"bless\":$(json_str "${PHOTO_BLESS:-}"),\"gallery\":$(json_list "${PHOTO_GALLERY:-}"),\
@@ -410,7 +410,7 @@ GIFT_BLOB="$(obfuscate "$GIFT_JSON")"
     echo "window.__NO_API__=true;"
   fi
   echo "window.__WEDDING__=${WEDDING_JSON};"
-  echo "window.__NAVER_MAP_KEY__=$(json_str "${NAVER_MAP_KEY_ID:-}");"
+  # 카카오 키. 공유하기와 지도 embed가 같은 JavaScript 키를 함께 쓴다.
   echo "window.__KAKAO_KEY__=$(json_str "${KAKAO_JS_KEY:-}");"
   echo "window.__GA_ID__=$(json_str "${GA_MEASUREMENT_ID:-}");"
   echo "window.__GIFT__=$(json_str "$GIFT_BLOB");"

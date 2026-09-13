@@ -154,7 +154,7 @@ const CFG = (function build() {
     name: s('VENUE_NAME'), hall: s('VENUE_HALL'), address: s('VENUE_ADDRESS'),
     floor: s('VENUE_FLOOR'), addressCopy: s('VENUE_ADDRESS_COPY'),
     subway: s('VENUE_SUBWAY'), subwayShort: s('VENUE_SUBWAY_SHORT'),
-    lat: n('VENUE_LAT', 0), lng: n('VENUE_LNG', 0), zoom: n('VENUE_MAP_ZOOM', 17),
+    lat: n('VENUE_LAT', 0), lng: n('VENUE_LNG', 0), zoom: n('VENUE_MAP_ZOOM', 3),
   };
 
   const photos = {
@@ -232,7 +232,7 @@ const CFG = (function build() {
       terminal: s('PHOTO_OG_TERMINAL') || photos.mainDev || photos.main,
     },
     accounts: { groom: parseAccounts(CONF.GROOM_ACCOUNTS), bride: parseAccounts(CONF.BRIDE_ACCOUNTS) },
-    naverMapKey: s('NAVER_MAP_KEY_ID'),
+    // 카카오 키. 공유하기와 지도 embed가 같은 JavaScript 키를 함께 쓴다.
     kakaoKey: s('KAKAO_JS_KEY'),
     gaId: s('GA_MEASUREMENT_ID'),
     siteOrigin: s('SITE_ORIGIN').replace(/\/+$/, ''),
@@ -466,7 +466,6 @@ function serveHtml(file, req, res) {
     `window.__PHOTOS__='photos/'`,
     origin ? `window.__ORIGIN__=${JSON.stringify(origin)}` : '',
     `window.__WEDDING__=${JSON.stringify(CFG.wedding)}`,
-    `window.__NAVER_MAP_KEY__=${JSON.stringify(CFG.naverMapKey)}`,
     `window.__KAKAO_KEY__=${JSON.stringify(CFG.kakaoKey)}`,
     `window.__GA_ID__=${JSON.stringify(CFG.gaId)}`,
   ].filter(Boolean).join(';');

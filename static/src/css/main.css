@@ -720,7 +720,7 @@ section {
   color: var(--rose);
 }
 
-/* 네이버 지도 embed. 키가 있으면 지도를, 없으면 안내 문구(.is-fallback)를 보여준다. */
+/* 카카오맵 embed. 키가 있으면 지도를, 없으면 안내 문구(.is-fallback)를 보여준다. */
 .map-embed {
   height: 260px;
   margin-top: 18px;

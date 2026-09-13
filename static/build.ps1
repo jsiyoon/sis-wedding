@@ -360,7 +360,7 @@ $weddingJson = '{"at":' + (JStr (Cf 'WEDDING_AT')) +
     ',"subwayShort":' + (JStr (Cf 'VENUE_SUBWAY_SHORT')) +
     ',"lat":' + (NumOr (Cf 'VENUE_LAT') '0') +
     ',"lng":' + (NumOr (Cf 'VENUE_LNG') '0') +
-    ',"zoom":' + (NumOr (Cf 'VENUE_MAP_ZOOM') '17') + '}' +
+    ',"zoom":' + (NumOr (Cf 'VENUE_MAP_ZOOM') '3') + '}' +
   ',"map":{"naver":' + (JStr (Cf 'MAP_NAVER_URL')) +
     ',"kakao":' + (JStr (Cf 'MAP_KAKAO_URL')) + '}' +
   ',"photos":{"main":' + (JStr (Cf 'PHOTO_MAIN')) +
@@ -385,7 +385,7 @@ $api = (Cf 'GUESTBOOK_API_BASE').TrimEnd('/')
 if ($api) { [void]$data.AppendLine("window.__API__=$(JStr $api);") }
 else      { [void]$data.AppendLine('window.__NO_API__=true;') }
 [void]$data.AppendLine("window.__WEDDING__=$weddingJson;")
-[void]$data.AppendLine("window.__NAVER_MAP_KEY__=$(JStr (Cf 'NAVER_MAP_KEY_ID'));")
+# 카카오 키. 공유하기와 지도 embed가 같은 JavaScript 키를 함께 쓴다.
 [void]$data.AppendLine("window.__KAKAO_KEY__=$(JStr (Cf 'KAKAO_JS_KEY'));")
 [void]$data.AppendLine("window.__GA_ID__=$(JStr (Cf 'GA_MEASUREMENT_ID'));")
 [void]$data.AppendLine("window.__GIFT__=$(JStr $giftBlob);")
