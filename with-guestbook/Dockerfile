@@ -11,6 +11,10 @@ WORKDIR /app
 COPY server ./server
 COPY src ./src
 COPY invitation.conf.example ./invitation.conf.example
+# bind mount가 없는 환경(Railway 등)을 위한 기본 conf입니다. demo 값 그대로입니다.
+# readConf()가 같은 이름의 환경변수를 그 값보다 우선하므로, 필요한 값만 환경변수로
+# 얹으면 그 값이 이깁니다. bind mount가 있으면(docker-compose) 이 파일은 가려집니다.
+COPY invitation.conf.example ./invitation.conf
 
 # 축하 한마디 DB가 들어갈 곳입니다. compose가 volume을 여기에 붙입니다.
 RUN mkdir -p /app/data && chown -R node:node /app
