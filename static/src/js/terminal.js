@@ -224,7 +224,7 @@ function sideBySide(logo, info) {
   const uptimeDays = Math.floor((Date.now() - FIRST_COMMIT) / 86400000);
 
   const logo = [
-    '    __   __    ',
+    '   __   __    ',
     '  /   \\/  \\ ',
     ' | HK ♥ YS | ',
     '  \\       /  ',
