@@ -347,6 +347,9 @@ function sendJson(res, status, body) {
   res.writeHead(status, {
     'Content-Type': 'application/json; charset=utf-8',
     'Cache-Control': 'no-store',
+    // 이 API는 인증 없이 부르는 공개 경로라 어느 origin에서 불러도 된다.
+    // static 배포(GUESTBOOK_API_BASE)처럼 다른 domain에서 부르는 경우를 지원하려는 것이다.
+    'Access-Control-Allow-Origin': '*',
   });
   res.end(JSON.stringify(body));
 }
@@ -377,7 +380,12 @@ function clientIp(req) {
    응답 계약과 id 형식은 청첩장 세 version의 js/config.js 가 기대하는 그대로다. */
 async function handleApi(req, res) {
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, { 'Access-Control-Allow-Methods': 'GET, POST, OPTIONS' });
+    res.writeHead(204, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type',
+      'Access-Control-Max-Age': '86400',
+    });
     return res.end();
   }
 
