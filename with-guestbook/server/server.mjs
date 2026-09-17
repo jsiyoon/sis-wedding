@@ -7,9 +7,9 @@
      GET  /                         DEFAULT_VERSION 의 page
      GET  /main, /developer 등      각 version. 확장자가 없다. 요청마다 SSR한다.
      GET  /main.html 등             확장자 없는 같은 주소로 301 보낸다.
-     GET  /api/approvals            { count, recent: [{ id, ts, msg }] }
+     GET  /api/approvals            { count, recent: [{ id, ts, msg, name }] }
      GET  /api/approvals?before=id  그보다 오래된 20건
-     POST /api/approvals { message } { count }
+     POST /api/approvals { name, message } { count }   name이 비어 있으면 400
      GET  /healthz                  liveness
 
    HTML은 요청마다 생성한다. token을 치환하고 계좌를 난독화해 주입한다.
@@ -39,6 +39,8 @@ const DB_FILE = process.env.DB_FILE || path.join(ROOT, 'data', 'guestbook.db');
 
 /** 축하 한마디 최대 글자수. 화면의 counter와 같은 값이다. */
 const MAX_MSG = 50;
+/** 보내는 사람 이름 최대 글자수. 비우면 화면에 '익명'으로 나온다. */
+const MAX_NAME = 12;
 /** 한 page 건수. 첫 응답 건수이자 '더보기' 1회분이다. */
 const PAGE = 20;
 /** 요청 본문 상한 */
@@ -284,12 +286,15 @@ db.exec(`
     exp INTEGER NOT NULL
   );
 `);
+// name 열은 나중에 추가됐다. 이미 떠 있는(구버전 스키마) DB에도 조용히 붙인다.
+// 이미 있으면 SQLite가 "duplicate column name" 오류를 던지므로 무시한다.
+try { db.exec("ALTER TABLE approvals ADD COLUMN name TEXT NOT NULL DEFAULT ''"); } catch { /* 이미 있음 */ }
 
 const Q = {
   count: db.prepare('SELECT COUNT(*) AS c FROM approvals'),
-  recent: db.prepare('SELECT seq, ms, ts, msg FROM approvals ORDER BY seq DESC LIMIT ?'),
-  older: db.prepare('SELECT seq, ms, ts, msg FROM approvals WHERE seq < ? ORDER BY seq DESC LIMIT ?'),
-  insert: db.prepare('INSERT INTO approvals (ms, ts, msg, ip) VALUES (?, ?, ?, ?)'),
+  recent: db.prepare('SELECT seq, ms, ts, msg, name FROM approvals ORDER BY seq DESC LIMIT ?'),
+  older: db.prepare('SELECT seq, ms, ts, msg, name FROM approvals WHERE seq < ? ORDER BY seq DESC LIMIT ?'),
+  insert: db.prepare('INSERT INTO approvals (ms, ts, msg, name, ip) VALUES (?, ?, ?, ?, ?)'),
   rlGet: db.prepare('SELECT exp FROM ratelimit WHERE ip = ?'),
   rlSet: db.prepare(
     'INSERT INTO ratelimit (ip, exp) VALUES (?, ?) ON CONFLICT(ip) DO UPDATE SET exp = excluded.exp',
@@ -297,7 +302,7 @@ const Q = {
   rlSweep: db.prepare('DELETE FROM ratelimit WHERE exp < ?'),
 };
 
-const toItem = (r) => ({ id: `${r.ms}-${r.seq}`, ts: r.ts, msg: r.msg ?? '' });
+const toItem = (r) => ({ id: `${r.ms}-${r.seq}`, ts: r.ts, msg: r.msg ?? '', name: r.name ?? '' });
 const approvalCount = () => Number(Q.count.get().c ?? 0);
 
 /** '더보기' cursor("<ms>-<seq>")에서 seq만 꺼낸다. 정렬 기준이 seq이기 때문이다. */
@@ -327,7 +332,7 @@ function rateLimited(ip) {
    한 줄로 만들고, 태그 문자를 막고(XSS), 길이를 자른다.
    결합문자(Zalgo)와 제어문자, zero-width, 방향제어(BIDI)를 없앤다.
    client의 cleanMessage와 같은 규칙이며, client를 신뢰하지 않고 server에서 다시 적용한다. */
-function sanitize(input) {
+function sanitize(input, maxLen = MAX_MSG) {
   const stripped = String(input ?? '').replace(/\p{M}+/gu, '');
   let out = '';
   for (const ch of stripped) {
@@ -338,7 +343,7 @@ function sanitize(input) {
         (c >= 0x202a && c <= 0x202e) || c === 0x2060 || c === 0xfeff) continue;
     out += ch;
   }
-  return out.replace(/[<>]/g, '').trim().slice(0, MAX_MSG);
+  return out.replace(/[<>]/g, '').trim().slice(0, maxLen);
 }
 
 
@@ -412,9 +417,12 @@ async function handleApi(req, res) {
     if (rateLimited(ip)) return sendJson(res, 429, { count: approvalCount(), error: 'rate limited' });
 
     const body = await readBody(req);
+    const name = sanitize(body.name, MAX_NAME);
+    // 이름은 필수다. client도 막지만, client를 신뢰하지 않고 server에서 다시 검사한다.
+    if (!name) return sendJson(res, 400, { count: approvalCount(), error: 'name required' });
     const msg = sanitize(body.message);
     try {
-      Q.insert.run(Date.now(), new Date().toISOString(), msg, ip);
+      Q.insert.run(Date.now(), new Date().toISOString(), msg, name, ip);
       return sendJson(res, 200, { count: approvalCount() });
     } catch (e) {
       console.error('approval write failed:', e.message);

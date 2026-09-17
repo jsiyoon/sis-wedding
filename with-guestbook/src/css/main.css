@@ -1019,6 +1019,10 @@ details.gift .acc-list {
   color: var(--rose);
 }
 
+.bless-log .bl-line .bl-name {
+  color: var(--ink-bright);
+}
+
 /* '더보기'. scroll 영역 안, 목록 맨 끝에 붙어 끝까지 내려야 보인다. */
 .bless-log .bl-more {
   display: block;

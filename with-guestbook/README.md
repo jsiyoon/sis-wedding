@@ -120,12 +120,12 @@ docker compose cp invitation:/app/data/guestbook.db ./guestbook-backup.db
 
 # 사람이 읽을 형태로 뽑습니다 (sqlite3 가 있을 때)
 sqlite3 -header -csv guestbook-backup.db \
-  'SELECT ts, msg FROM approvals ORDER BY seq' > guestbook.csv
+  'SELECT ts, name, msg FROM approvals ORDER BY seq' > guestbook.csv
 
 # API로도 받을 수 있습니다
 curl -s http://localhost:8080/api/approvals | node -e \
   'let d="";process.stdin.on("data",c=>d+=c).on("end",()=>{
-     for(const r of JSON.parse(d).recent) console.log(r.ts, r.msg)})'
+     for(const r of JSON.parse(d).recent) console.log(r.ts, r.name, r.msg)})'
 ```
 
 되돌릴 때는 `docker compose down` 을 한 뒤 volume에 파일을 넣고 다시 띄웁니다.
@@ -166,14 +166,16 @@ page 주소에 확장자가 없습니다.
 
 | method | 경로 | 응답 |
 |---|---|---|
-| `GET` | `/api/approvals` | `{count, recent: [{id, ts, msg}]}` 최신 20건 |
+| `GET` | `/api/approvals` | `{count, recent: [{id, ts, msg, name}]}` 최신 20건 |
 | `GET` | `/api/approvals?before=<id>` | 그보다 오래된 20건 ('더보기') |
-| `POST` | `/api/approvals` `{message}` | `{count}` |
+| `POST` | `/api/approvals` `{name, message}` | `{count}` (name이 비어 있으면 400) |
 | `GET` | `/healthz` | `ok` |
 
 - `id` 는 `<밀리초>-<순번>` 입니다. client가 '더보기' cursor와 중복 판별 key로 씁니다.
   **이 형식을 바꾸면 청첩장 세 version의 `js/config.js` 를 모두 고쳐야 합니다.**
-- 메시지는 **50자** 까지입니다. 넘으면 server가 자릅니다.
+- `name` 은 **필수** 입니다. 누가 축하했는지 알 수 있도록, 화면 입력창에서 비워 두면 전송 자체가
+  막힙니다. server도 다시 검사해 비어 있으면 400을 돌려줍니다. 최대 **12자** 까지입니다.
+- 메시지(`message`)는 **선택** 이고 **50자** 까지입니다. 넘으면 server가 자릅니다.
 - 메시지가 비어 있어도 됩니다. 그때는 version마다 정해 둔 문구 중에서 하나를 골라 보여 줍니다.
 
 ### server가 지키는 것
@@ -195,7 +197,7 @@ client를 신뢰하지 않고 server에서 다시 검사합니다.
 docker compose exec invitation node -e '
   const {DatabaseSync}=require("node:sqlite");
   const db=new DatabaseSync("/app/data/guestbook.db");
-  console.log(db.prepare("SELECT seq, ts, msg FROM approvals ORDER BY seq DESC LIMIT 20").all());
+  console.log(db.prepare("SELECT seq, ts, name, msg FROM approvals ORDER BY seq DESC LIMIT 20").all());
 '
 # seq 를 확인한 뒤
 docker compose exec invitation node -e '

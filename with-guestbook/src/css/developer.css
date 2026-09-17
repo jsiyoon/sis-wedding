@@ -1627,6 +1627,10 @@ details.gift .acc-list {
   color: var(--blue);
 }
 
+.approval-log .al-line .al-name {
+  color: var(--amber);
+}
+
 .approval-log .al-line .ok {
   color: var(--green);
 }

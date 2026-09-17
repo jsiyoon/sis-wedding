@@ -650,6 +650,7 @@ section { padding: 30px 0 6px; }
 .log .log-line { color: var(--fg); line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
 .log .log-line + .log-line { margin-top: 5px; }
 .log .log-line .ts { color: var(--cyan); }
+.log .log-line .name { color: var(--accent); }
 .log .log-line .ok { color: var(--fg-bright); }
 /* 목록만 세로로 scroll한다. 합계(.log-total)는 scroll 영역 밖이라 항상 보인다.
    마지막 줄이 반쯤 걸쳐 보이는 것 자체가 아래에 더 있다는 신호가 된다. */

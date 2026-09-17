@@ -540,7 +540,16 @@ deployBtn.addEventListener('click', function () {
   const at = +localStorage.getItem('wedding-bless-at') || 0;
   if (at && Date.now() - at < DEPLOY_COOLDOWN) return; // cooldown 중
 
-  // 50자 초과를 막는다. cooldown timestamp를 먼저 쓰지 않도록 전송 전에 검사한다.
+  // 이름은 필수다. cooldown timestamp를 먼저 쓰지 않도록 전송 전에 검사한다.
+  const nameEl = document.getElementById('deployName');
+  if (!((nameEl && nameEl.value) || '').trim()) {
+    deployMsg.textContent = '// 이름을 입력해 주세요';
+    deployMsg.classList.add('show');
+    if (nameEl) nameEl.focus();
+    return;
+  }
+
+  // 50자 초과를 막는다.
   if (typeof blessExceeded === 'function' && blessExceeded('deployInput')) {
     deployMsg.textContent = '// 50자를 넘기는 축하 메세지는 보낼 수 없어요';
     deployMsg.classList.add('show');
@@ -619,9 +628,9 @@ function esc(s) {
 function readDemo() {
   return JSON.parse(localStorage.getItem('wedding-approvals-demo') || '[]');
 }
-function pushDemo(msg) {
+function pushDemo(name, msg) {
   const demo = readDemo();
-  demo.push({ ts: new Date().toISOString(), msg });
+  demo.push({ ts: new Date().toISOString(), msg, name });
   localStorage.setItem('wedding-approvals-demo', JSON.stringify(demo));
 }
 
@@ -640,7 +649,7 @@ function renderApprovals(count, recent) {
   resolveAutoMsgs(recent, APPROVE_MSGS).forEach((it) => {
     const line = document.createElement('div');
     line.className = 'al-line';
-    line.innerHTML = `<span class="ts">[${timeAgo(it.ts)}]</span> ${esc(it.msg)}`;
+    line.innerHTML = `<span class="ts">[${timeAgo(it.ts)}]</span> <b class="al-name">${esc(it.name || '익명')}</b> ${esc(it.msg)}`;
     alLines.appendChild(line);
   });
 
@@ -678,7 +687,9 @@ async function fetchApprovals() {
 
 /** 승인 1건을 보낸다. 직접 입력한 한마디를 함께 싣고, 비우면 개발자 버전의 자동 문구로 표시된다. */
 async function sendApproval() {
+  const nameInput = document.getElementById('deployName');
   const input = document.getElementById('deployInput');
+  const name = ((nameInput && nameInput.value) || '').trim();
   const message = ((input && input.value) || '').trim();
 
   try {
@@ -687,15 +698,16 @@ async function sendApproval() {
     const res = await fetch(`${CONFIG.api.baseUrl}/approvals`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ name, message }),
     });
     // 404나 503 같은 응답은 fetch가 예외로 던지지 않는다. 그대로 두면 아래 catch가
     // 실행되지 않아 하객이 남긴 글이 아무 곳에도 저장되지 않고 사라진다.
     if (!res.ok) throw new Error('http ' + res.status);
   } catch {
-    pushDemo(message); // 전송 실패 시 데모 저장소에라도 기록
+    pushDemo(name, message); // 전송 실패 시 데모 저장소에라도 기록
   }
 
+  if (nameInput) { nameInput.value = ''; nameInput.dispatchEvent(new Event('input', { bubbles: true })); }
   if (input) { input.value = ''; input.dispatchEvent(new Event('input', { bubbles: true })); }  // 글자수 카운터도 리셋
   fetchApprovals();
 }

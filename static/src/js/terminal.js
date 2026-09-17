@@ -521,9 +521,9 @@ const LOG_MSGS = [
 
 // 자동 축하 문구 선택은 config.js pickAutoMsg/resolveAutoMsgs 로 일원화(직전 2개 제외).
 
-function pushDemo(msg) {
+function pushDemo(name, msg) {
   const demo = readDemo();
-  demo.push({ ts: new Date().toISOString(), msg });
+  demo.push({ ts: new Date().toISOString(), msg, name });
   localStorage.setItem('wedding-approvals-demo', JSON.stringify(demo));
 }
 
@@ -535,7 +535,7 @@ function renderApprovals(count, recent) {
   // 빈 msg는 자동 문구로 채우되 '직전 2개'와 안 겹치게(config.js resolveAutoMsgs). render는 최신순 유지.
   let html = recent.length
     ? resolveAutoMsgs(recent, LOG_MSGS).map((it) =>
-      `<div class="log-line"><span class="ts">[${timeAgo(it.ts)}]</span> <span class="ok">${esc(it.msg)}</span></div>`
+      `<div class="log-line"><span class="ts">[${timeAgo(it.ts)}]</span> <span class="name">${esc(it.name || '익명')}</span> <span class="ok">${esc(it.msg)}</span></div>`
     ).join('')
     : '<div class="log-line"># 첫 번째 축하를 deploy해 주세요!</div>';
 
@@ -569,8 +569,10 @@ async function fetchApprovals() {
 }
 
 async function sendApproval() {
-  // 직접 입력한 한마디(비우면 '' → terminal version 랜덤 문구로 표시)
+  // 이름은 필수, 직접 입력한 한마디는 선택(비우면 '' → terminal version 랜덤 문구로 표시)
+  const nameInput = document.getElementById('rsvpName');
   const input = document.getElementById('rsvpInput');
+  const name = ((nameInput && nameInput.value) || '').trim();
   const message = ((input && input.value) || '').trim();
 
   try {
@@ -579,15 +581,16 @@ async function sendApproval() {
     const res = await fetch(`${CONFIG.api.baseUrl}/approvals`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ name, message }),
     });
     // 404나 503 같은 응답은 fetch가 예외로 던지지 않는다. 그대로 두면 아래 catch가
     // 실행되지 않아 하객이 남긴 글이 아무 곳에도 저장되지 않고 사라진다.
     if (!res.ok) throw new Error('http ' + res.status);
   } catch {
-    pushDemo(message);
+    pushDemo(name, message);
   }
 
+  if (nameInput) { nameInput.value = ''; nameInput.dispatchEvent(new Event('input', { bubbles: true })); }
   if (input) { input.value = ''; input.dispatchEvent(new Event('input', { bubbles: true })); }  // 글자수 counter도 리셋
   fetchApprovals();
 }
@@ -646,7 +649,16 @@ rsvpBtn.addEventListener('click', function () {
   const at = +localStorage.getItem('wedding-bless-at') || 0;
   if (at && Date.now() - at < RSVP_COOLDOWN) return; // cooldown 중
 
-  // 50자 초과를 막는다. cooldown timestamp를 먼저 쓰지 않도록 전송 전에 검사한다.
+  // 이름은 필수다. cooldown timestamp를 먼저 쓰지 않도록 전송 전에 검사한다.
+  const nameEl = document.getElementById('rsvpName');
+  if (!((nameEl && nameEl.value) || '').trim()) {
+    rsvpMsg.textContent = '# error: 이름을 입력해 주세요';
+    rsvpMsg.classList.add('show');
+    if (nameEl) nameEl.focus();
+    return;
+  }
+
+  // 50자 초과를 막는다.
   if (typeof blessExceeded === 'function' && blessExceeded('rsvpInput')) {
     rsvpMsg.textContent = '# error: 50자를 넘기는 축하 메세지는 보낼 수 없어요';
     rsvpMsg.classList.add('show');

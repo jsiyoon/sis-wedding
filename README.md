@@ -160,8 +160,9 @@ with-guestbook:
 - **`window.__GIFT__`** 가 난독화된 계좌 blob입니다. `private.js` 의 `deobfuscate` 가 풉니다.
   난독화 쪽(`build.sh` 의 `obfuscate`, `server.mjs` 의 `obfuscate`)과 **1:1로 대응** 하므로
   한쪽만 고치면 계좌가 안 보입니다.
-- **축하 API 응답 계약** 은 `{count, recent: [{id, ts, msg}]}` 이고 **id 형식은 `<밀리초>-<순번>`** 입니다.
+- **축하 API 응답 계약** 은 `{count, recent: [{id, ts, msg, name}]}` 이고 **id 형식은 `<밀리초>-<순번>`** 입니다.
   client가 '더보기' cursor와 중복 판별 key로 씁니다. 바꾸면 세 version의 `config.js` 를 모두 고쳐야 합니다.
+  `name` 은 필수 입력이라, POST에 비어 있으면 server가 400으로 거절합니다.
 - **gallery는 3x3 pagination** 이라 9장이 한 page입니다. terminal version에는 gallery가 없습니다.
 - **`config.js` 안에서는 `W` 를 쓰지 않습니다.** `main.js`, `developer.js`, `terminal.js` 가 각자
   최상위에 `const W = CONFIG.date` 를 선언하므로 전역에서 부딪쳐 그 파일들이 통째로 죽습니다.

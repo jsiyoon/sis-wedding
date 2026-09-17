@@ -46,8 +46,8 @@ const CONFIG = {
   // 그 값이 window.__API__ 로 주입된다.
   // API가 아예 없는 정적 배포에서는 window.__NO_API__ 가 심어지고
   // 화면이 localStorage demo mode로 fallback한다.
-  // 계약: GET  {baseUrl}/approvals             -> { count, recent: [{ id, ts, msg }] }
-  //       POST {baseUrl}/approvals { message } -> { count }
+  // 계약: GET  {baseUrl}/approvals               -> { count, recent: [{ id, ts, msg, name }] }
+  //       POST {baseUrl}/approvals { name, message } -> { count }   name은 필수(비우면 서버가 400)
   api: {
     baseUrl: (typeof window !== 'undefined' && window.__API__) || '/api',
   },
@@ -305,10 +305,11 @@ function pickAutoMsg(iso, pool, avoid) {
   return pool[start];                            // 풀이 2개 이하일 때의 fallback
 }
 
-/* recent(최신순 [{ts,msg}])를 받아, 빈 msg를 자동 축하 문구로 채운 목록을 최신순 그대로 돌려준다.
+/* recent(최신순 [{ts,msg,name}])를 받아, 빈 msg를 자동 축하 문구로 채운 목록을 최신순 그대로 돌려준다.
    결정은 오래된 항목부터 최신 항목 쪽으로 진행해, 각 항목이 시간상 바로 앞의 두 메시지와
    겹치지 않게 한다. 기록이 append-only라 더 오래된 항목의 선택은 바뀌지 않고,
-   덕분에 polling을 반복해도 화면 표시가 흔들리지 않는다. */
+   덕분에 polling을 반복해도 화면 표시가 흔들리지 않는다.
+   name은 그대로 지나간다. AI agent 축하(demo 항목)는 name이 없어 빈 문자열로 나온다. */
 function resolveAutoMsgs(list, pool) {
   var out = new Array(list.length);
   var avoid = [];
@@ -316,7 +317,7 @@ function resolveAutoMsgs(list, pool) {
     var it = list[j] || {};
     var ts = it.ts || it;
     var msg = it.msg || pickAutoMsg(ts, pool, avoid);
-    out[j] = { ts: ts, msg: msg };
+    out[j] = { ts: ts, msg: msg, name: it.name || '' };
     avoid.push(msg);
     if (avoid.length > 2) avoid.shift();          // 직전 2개만 유지
   }
@@ -722,6 +723,23 @@ function blessExceeded(id) {
   var el = document.getElementById(id);
   return !!(el && String((el && el.value) || '').length > BLESS_LIMIT);
 }
+
+/* 이름 입력창. 메시지와 달리 maxlength=12를 그대로 두는 hard limit이라
+   글자수 counter나 '초과 경고'가 필요 없다. cleanMessage()로 깨진 기호만 거른다. */
+document.addEventListener('DOMContentLoaded', function () {
+  ['blessName', 'deployName', 'rsvpName'].forEach(function (id) {
+    var el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', function () {
+      var cleaned = cleanMessage(el.value);
+      if (cleaned !== el.value) {
+        var atEnd = el.selectionStart === el.value.length;
+        el.value = cleaned;
+        if (atEnd) { try { el.setSelectionRange(cleaned.length, cleaned.length); } catch (e) { } }
+      }
+    });
+  });
+});
 
 document.addEventListener('DOMContentLoaded', function () {
   ['blessInput', 'deployInput', 'rsvpInput'].forEach(function (id) {

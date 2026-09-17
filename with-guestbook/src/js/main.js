@@ -389,7 +389,7 @@ function renderBlessings(count, recent) {
   resolveAutoMsgs(recent, BLESS_MSGS).forEach((it) => {
     const line = document.createElement('div');
     line.className = 'bl-line';
-    line.innerHTML = `<span class="ts">${timeAgo(it.ts)}</span> ${esc(it.msg)}`;
+    line.innerHTML = `<span class="ts">${timeAgo(it.ts)}</span> <b class="bl-name">${esc(it.name || '익명')}</b> ${esc(it.msg)}`;
     blLines.appendChild(line);
   });
 
@@ -415,9 +415,9 @@ function readDemo() {
   return JSON.parse(localStorage.getItem('wedding-approvals-demo') || '[]');
 }
 
-function pushDemo(msg) {
+function pushDemo(name, msg) {
   const demo = readDemo();
-  demo.push({ ts: new Date().toISOString(), msg });
+  demo.push({ ts: new Date().toISOString(), msg, name });
   localStorage.setItem('wedding-approvals-demo', JSON.stringify(demo));
 }
 
@@ -431,8 +431,10 @@ async function fetchBlessings() {
 }
 
 async function sendBlessing() {
-  // 직접 입력한 한마디(비우면 '' → 서버가 ts만 저장 → 일반 버전 랜덤 문구로 표시)
+  // 이름은 필수, 한마디는 선택(비우면 '' → 서버가 ts만 저장 → 일반 버전 랜덤 문구로 표시)
+  const nameInput = document.getElementById('blessName');
   const input = document.getElementById('blessInput');
+  const name = ((nameInput && nameInput.value) || '').trim();
   const message = ((input && input.value) || '').trim();
 
   try {
@@ -441,15 +443,16 @@ async function sendBlessing() {
     const res = await fetch(`${CONFIG.api.baseUrl}/approvals`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message }),
+      body: JSON.stringify({ name, message }),
     });
     // 404나 503 같은 응답은 fetch가 예외로 던지지 않는다. 그대로 두면 아래 catch가
     // 실행되지 않아 하객이 남긴 글이 아무 곳에도 저장되지 않고 사라진다.
     if (!res.ok) throw new Error('http ' + res.status);
   } catch {
-    pushDemo(message);
+    pushDemo(name, message);
   }
 
+  if (nameInput) { nameInput.value = ''; nameInput.dispatchEvent(new Event('input', { bubbles: true })); }
   if (input) { input.value = ''; input.dispatchEvent(new Event('input', { bubbles: true })); }  // 글자수 카운터도 리셋
   fetchBlessings();
 }
@@ -506,7 +509,16 @@ blessBtn.addEventListener('click', function () {
   const at = +localStorage.getItem('wedding-bless-at') || 0;
   if (at && Date.now() - at < BLESS_COOLDOWN) return; // 쿨다운 중
 
-  // 50자 초과를 막는다. 쿨다운 타임스탬프를 먼저 쓰지 않도록 전송 전에 검사한다.
+  // 이름은 필수다. 쿨다운 타임스탬프를 먼저 쓰지 않도록 전송 전에 검사한다.
+  const nameEl = document.getElementById('blessName');
+  if (!((nameEl && nameEl.value) || '').trim()) {
+    blessMsg.textContent = '이름을 입력해 주세요.';
+    blessMsg.classList.add('show');
+    if (nameEl) nameEl.focus();
+    return;
+  }
+
+  // 50자 초과를 막는다.
   if (typeof blessExceeded === 'function' && blessExceeded('blessInput')) {
     blessMsg.textContent = '50자를 넘기는 축하 메세지는 보낼 수 없어요.';
     blessMsg.classList.add('show');
