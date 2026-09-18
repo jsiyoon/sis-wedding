@@ -387,7 +387,7 @@ function renderBlessings(count, recent) {
   resolveAutoMsgs(recent, BLESS_MSGS).forEach((it) => {
     const line = document.createElement('div');
     line.className = 'bl-line';
-    line.innerHTML = `<b class="bl-name">${esc(it.name || '익명')}</b><span class="ts">${timeAgo(it.ts)}</span><br /> ${esc(it.msg)}`;
+    line.innerHTML = `<b class="bl-name">${esc(it.name || '익명')}</b>  <span class="ts" style="font-size:13px">[${timeAgo(it.ts)}]</span><br /> ${esc(it.msg)}`;
     blLines.appendChild(line);
   });
 

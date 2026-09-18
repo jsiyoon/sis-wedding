@@ -1644,7 +1644,7 @@ details.gift .acc-list {
 /* 목록만 세로로 scroll한다. 합계(.al-total)는 scroll 영역 밖이라 항상 보인다.
    마지막 줄이 반쯤 걸쳐 보이는 것 자체가 아래에 더 있다는 신호가 된다. */
 .approval-log .al-lines {
-  max-height: 150px;
+  max-height: 215px;
   overflow-y: auto;
   padding-right: 8px;                /* scrollbar와 글자 사이 여백 */
   overscroll-behavior: contain;      /* 끝까지 내려도 page가 따라 밀리지 않게 */

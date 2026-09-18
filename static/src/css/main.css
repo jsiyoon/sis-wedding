@@ -975,7 +975,7 @@ details.gift .acc-list {
 /* 목록만 세로로 scroll한다. 높이는 약 5.5줄치(.bl-line 24.75px에 줄간격 7px 기준)로 잡았다.
    마지막 줄이 반쯤 걸쳐 보이는 것 자체가 아래에 더 있다는 신호가 된다. */
 .bless-log .bl-lines {
-  max-height: 168px;
+  max-height: 300px;
   overflow-y: auto;
   padding-right: 8px;
   /* scrollbar와 글자 사이 여백 */
