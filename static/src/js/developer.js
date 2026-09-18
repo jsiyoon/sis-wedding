@@ -583,12 +583,11 @@ const alTotal = document.getElementById('alTotal');
 // box 높이는 css .al-lines 의 max-height 가 잡고, 넘치면 scroll된다.
 
 /** ISO timestamp를 "방금 전", "3분 전" 같은 상대 시간으로 바꾼다. */
+// '몇 분 전' 대신 YYYY-MM-DD 날짜로 보여준다.
 function timeAgo(iso) {
-  const sec = Math.floor((Date.now() - new Date(iso)) / 1000);
-  if (sec < 60) return '방금 전';
-  if (sec < 3600) return `${Math.floor(sec / 60)}분 전`;
-  if (sec < 86400) return `${Math.floor(sec / 3600)}시간 전`;
-  return `${Math.floor(sec / 86400)}일 전`;
+  const d = new Date(iso);
+  const p2 = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${p2(d.getMonth() + 1)}-${p2(d.getDate())}`;
 }
 
 // 축하 메시지 풀(개발자와 code 톤). timestamp hash로 안정적으로 골라 매번 다른 한마디가 나온다.
