@@ -327,6 +327,7 @@ document.getElementById('copyAddr').addEventListener('click', (e) => {
  */
 
 const blLines = document.getElementById('blLines');
+const blTotal = document.getElementById('blTotal');
 // 표시 개수는 config.js의 스토어가 20건 단위로 관리한다. 여기서는 받아둔 만큼 전부 그린다.
 // box 높이는 css .bl-lines 의 max-height 가 잡고, 넘치면 scroll된다.
 
@@ -383,12 +384,10 @@ function renderBlessings(count, recent) {
   }
 
   // 빈 msg는 자동 문구로 채우되 '직전 2개'와 안 겹치게(config.js resolveAutoMsgs). 렌더는 최신순 유지.
-  // 카드 형태: 첫 줄은 이름(왼쪽)과 날짜(오른쪽)를 양 끝에 나눠 담고, 그 아래 줄에 메시지를 둔다.
   resolveAutoMsgs(recent, BLESS_MSGS).forEach((it) => {
     const line = document.createElement('div');
     line.className = 'bl-line';
-    line.innerHTML = `<div class="bl-row"><b class="bl-name">${esc(it.name || '익명')}</b><span class="ts">${timeAgo(it.ts)}</span></div>`
-      + `<div class="bl-msg">${esc(it.msg)}</div>`;
+    line.innerHTML = `<span class="ts">${timeAgo(it.ts)}</span> <b class="bl-name">${esc(it.name || '익명')}</b> ${esc(it.msg)}`;
     blLines.appendChild(line);
   });
 
@@ -407,6 +406,7 @@ function renderBlessings(count, recent) {
   }
 
   blLines.scrollTop = keepScroll;
+  blTotal.innerHTML = `지금까지 <b>${count.toLocaleString()}</b>번의 축하를 받았어요`;
 }
 
 function readDemo() {
