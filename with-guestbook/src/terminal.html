@@ -191,12 +191,15 @@
 
           <div class="rsvp-line rv">
             <span class="rsvp-prompt" aria-hidden="true">$</span>
-            <input class="rsvp-input rsvp-input-name" id="rsvpName" type="text" maxlength="12" placeholder="whoami"
+            <input class="rsvp-input" id="rsvpName" type="text" maxlength="12" placeholder="whoami (필수, 최대 12자)"
               autocomplete="off" required />
-            <input class="rsvp-input rsvp-input-msg" id="rsvpInput" type="text" maxlength="50" placeholder="echo '축하 한마디' (선택)"
+          </div>
+          <div class="rsvp-line rv">
+            <span class="rsvp-prompt" aria-hidden="true">$</span>
+            <input class="rsvp-input" id="rsvpInput" type="text" maxlength="50" placeholder="echo '축하 한마디' (선택, 최대 50자)"
               autocomplete="off" />
           </div>
-          <p class="input-hint rv"># whoami는 필수, 축하 한마디는 입력하지 않으시면 랜덤한 메세지가 발송됩니다</p>
+          <p class="input-hint rv"># 입력하지 않으시면 랜덤한 축하 메세지가 발송됩니다</p>
           <button class="rsvp-btn rv" id="rsvpBtn" type="button">$ approve --deploy wedding</button>
           <div class="rsvp-msg" id="rsvpMsg"></div>
 
