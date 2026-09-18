@@ -648,7 +648,7 @@ section { padding: 30px 0 6px; }
 .log .cmd { color: var(--fg); }
 .log .cm  { color: var(--fg-dim); }
 .log .log-line { color: var(--fg); line-height: 1.6; word-break: keep-all; overflow-wrap: anywhere; }
-.log .log-line + .log-line { margin-top: 5px; }
+.log .log-line + .log-line { margin-top: 5px; padding-top: 5px; border-top: 1px dashed var(--fg-dim); }
 .log .log-line .ts { color: var(--cyan); }
 .log .log-line .name { color: var(--accent); }
 .log .log-line .ok { color: var(--fg-bright); }

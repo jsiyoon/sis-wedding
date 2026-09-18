@@ -1010,6 +1010,8 @@ details.gift .acc-list {
 
 .bless-log .bl-line+.bl-line {
   margin-top: 7px;
+  padding-top: 7px;
+  border-top: 1px dashed var(--line-soft);
 }
 
 .bless-log .bl-line .ts {
