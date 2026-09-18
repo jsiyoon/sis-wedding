@@ -251,11 +251,13 @@
         저희에게 큰 힘이 됩니다.
       </p>
 
-      <input class="bless-input rv d1" id="blessName" type="text" maxlength="12" placeholder="이름 (필수, 최대 12자)"
-        autocomplete="off" required />
-      <input class="bless-input rv d1" id="blessInput" type="text" maxlength="50" placeholder="축하 한마디 (선택, 최대 50자)"
-        autocomplete="off" />
-      <p class="input-hint rv d1">입력하지 않으시면 랜덤한 축하 메세지가 발송됩니다.</p>
+      <div class="bless-input-row rv d1">
+        <input class="bless-input bless-input-name" id="blessName" type="text" maxlength="12" placeholder="이름"
+          autocomplete="off" required />
+        <input class="bless-input bless-input-msg" id="blessInput" type="text" maxlength="50" placeholder="축하 한마디 (선택)"
+          autocomplete="off" />
+      </div>
+      <p class="input-hint rv d1">이름은 필수입니다. 한마디를 입력하지 않으시면 랜덤한 축하 메세지가 발송됩니다.</p>
       <button class="bless-btn rv d1" id="blessBtn" type="button">축하의 마음 전하기 ❀</button>
       <div class="bless-msg" id="blessMsg"></div>
 

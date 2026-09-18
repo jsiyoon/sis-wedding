@@ -872,6 +872,18 @@ details.gift .acc-list {
   text-align: center;
 }
 
+/* 이름(1)과 한마디(3)를 한 줄에 나눠 담는다. 이름은 필수라 늘 먼저 보이게 왼쪽에 둔다.
+   .bless-count(글자수 counter)가 config.js에서 .bless-input-msg 뒤에 꽂히므로,
+   flex-basis:100%로 강제로 다음 줄로 넘겨 두 입력칸의 너비 비율을 건드리지 않는다. */
+.bless-input-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  width: 100%;
+  max-width: 340px;
+  margin: 0 auto 6px;
+}
+
 .bless-input {
   display: block;
   width: 100%;
@@ -885,6 +897,22 @@ details.gift .acc-list {
   font-size: 16px;
   color: var(--ink);
   text-align: center;
+}
+
+.bless-input-row .bless-input {
+  width: auto;
+  max-width: none;
+  min-width: 0;
+  margin: 0;
+}
+
+.bless-input-name { flex: 1 1 0; }
+.bless-input-msg { flex: 3 1 0; }
+
+/* config.js가 insertAdjacentElement('afterend', ...)로 #blessInput 바로 뒤에 넣으므로
+   .bless-count는 .bless-input-row의 자식(3번째 flex item)이 된다. 100% 너비로 강제로 줄바꿈시킨다. */
+.bless-input-row .bless-count {
+  flex-basis: 100%;
 }
 
 .bless-input::placeholder {
