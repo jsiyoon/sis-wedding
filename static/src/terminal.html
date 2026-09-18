@@ -195,10 +195,10 @@
             <input class="rsvp-input" id="rsvpName" type="text" maxlength="12" placeholder="whoami" autocomplete="off"
               required />
           </div>
-          <div class="rsvp-line rv">
+          <div class="rsvp-line rsvp-line-textarea rv">
             <span class="rsvp-prompt" aria-hidden="true">$</span>
-            <input class="rsvp-input" id="rsvpInput" type="text" maxlength="50" placeholder="echo '축하 한마디' (최대 50자)"
-              autocomplete="off" />
+            <textarea class="rsvp-input rsvp-textarea" id="rsvpInput" maxlength="50" rows="2"
+              placeholder="echo '축하 한마디' (최대 50자)" autocomplete="off"></textarea>
           </div>
           <p class="input-hint rv"># 축하 메시지를 입력하지 않으시면 랜덤 메시지가 발송됩니다</p>
           <button class="rsvp-btn rv" id="rsvpBtn" type="button">$ approve --deploy wedding</button>

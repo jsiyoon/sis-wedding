@@ -436,7 +436,7 @@ function shareViaSms(d) {
 
 /* 3) 이외 방법. system native 공유 sheet(navigator.share)를 쓰고, 미지원이면 link를 복사한다. */
 function shareViaSystem(d, btn) {
-  if (navigator.share) navigator.share({ url: d.url }).catch(function () {});
+  if (navigator.share) navigator.share({ url: d.url }).catch(function () { });
   else copyLink(d.url, btn);
 }
 
@@ -581,7 +581,7 @@ document.addEventListener('DOMContentLoaded', function () {
    #venueMap 요소가 있고 키가 설정돼 있을 때만 지도를 그린다.
    키가 없거나 load에 실패하면 container에 .is-fallback을 붙여 안내 문구(.map-note)를 노출하고,
    네이버 지도와 카카오맵 길찾기 button으로 유도한다.
-   key는 '카카오톡 공유하기'(initKakaoShare)와 같은 JavaScript 키를 그대로 쓴다.
+   key는 '공유하기'(initKakaoShare)와 같은 JavaScript 키를 그대로 쓴다.
    다만 SDK는 다르다. 공유는 kakao.min.js, 지도는 dapi.kakao.com/v2/maps/sdk.js 로 따로 부른다. */
 function initKakaoMap() {
   var box = document.getElementById('venueMap');
@@ -619,7 +619,7 @@ function initKakaoMap() {
   var s = document.createElement('script');
   s.id = 'kakao-maps-sdk';
   s.src = 'https://dapi.kakao.com/v2/maps/sdk.js?appkey=' +
-          encodeURIComponent(key) + '&autoload=false';
+    encodeURIComponent(key) + '&autoload=false';
   s.onload = function () {
     try { kakao.maps.load(draw); } catch (e) { fallback(); }
   };
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', initKakaoMap);
    touch-action으로 pinch와 double tap zoom을 끄고, gesture event와 데스크톱의 ctrl 또는 command zoom도
    막는다. 일반 scroll은 그대로 둔다. */
 (function blockZoom() {
-  try { document.documentElement.style.touchAction = 'pan-x pan-y'; } catch (e) {}
+  try { document.documentElement.style.touchAction = 'pan-x pan-y'; } catch (e) { }
   // iOS Safari pinch(gesture) zoom
   ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (ev) {
     document.addEventListener(ev, function (e) { e.preventDefault(); }, { passive: false });
@@ -672,7 +672,7 @@ document.addEventListener('DOMContentLoaded', initKakaoMap);
    세 겹으로 막는다. browser마다 메뉴를 띄우는 경로가 달라 한 가지로는 다 안 잡힌다.
      1) -webkit-touch-callout      : iOS 사파리의 callout
      2) contextmenu preventDefault : 데스크톱과 안드로이드 크롬의 context 메뉴
-     3) pointer-events:none        : 카카오톡 등 in-app browser(안드로이드 WebView)
+     3) pointer-events:none        : 등 in-app browser(안드로이드 WebView)
    3)이 없으면 in-app browser를 못 막는다. 앱이 직접 long press를 가로채 hit test 결과가
    image면 저장 메뉴를 띄우는데, JS의 contextmenu를 아예 거치지 않아 2)가 통하지 않는다.
    image를 히트 대상에서 빼면 결과가 image가 아니게 되어 메뉴가 뜨지 않는다.
@@ -705,12 +705,21 @@ function cleanMessage(s) {
   var out = '';
   for (var i = 0; i < s.length; i++) {
     var c = s.charCodeAt(i);
-    if (c < 0x20 || (c >= 0x7f && c <= 0x9f)) continue;                       // 제어문자(C0, C1)
+    if (c === 0x0a) { out += s.charAt(i); continue; }                         // 줄바꿈(Enter)은 입력 중엔 그대로 둔다.
+    // 실제로 보낼 때는 sendBlessing 등에서 공백으로 바꾸고, server도 다시 그렇게 정리한다
+    // (developer/terminal의 한 줄 로그 표시가 깨지지 않게).
+    if (c < 0x20 || (c >= 0x7f && c <= 0x9f)) continue;                       // 나머지 제어문자(C0, C1)
     if (c === 0x200b || c === 0x200c || c === 0x200e || c === 0x200f ||
-        (c >= 0x202a && c <= 0x202e) || c === 0x2060 || c === 0xfeff) continue; // zero-width, 방향제어(BIDI)
+      (c >= 0x202a && c <= 0x202e) || c === 0x2060 || c === 0xfeff) continue; // zero-width, 방향제어(BIDI)
     out += s.charAt(i);
   }
   return out;
+}
+
+/* textarea에 입력된 줄바꿈을 공백으로 바꾼다. server의 sanitize()와 같은 규칙이며,
+   developer/terminal의 한 줄 로그 표시가 깨지지 않게 전송 직전에 한 번 더 정리한다. */
+function collapseLines(s) {
+  return String(s == null ? '' : s).replace(/\s*\n+\s*/g, ' ');
 }
 
 /* 축하 한마디 글자수 제한(세 version 공통)
@@ -776,7 +785,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (cleaned !== el.value) {
         var atEnd = el.selectionStart === el.value.length;
         el.value = cleaned;
-        if (atEnd) { try { el.setSelectionRange(cleaned.length, cleaned.length); } catch (e) {} }
+        if (atEnd) { try { el.setSelectionRange(cleaned.length, cleaned.length); } catch (e) { } }
       }
       refresh();
     });
@@ -838,12 +847,12 @@ document.addEventListener('DOMContentLoaded', function () {
     var gn = String((CONFIG.people.groom || {}).en || '').split(' ')[0];
     var bn = String((CONFIG.people.bride || {}).en || '').split(' ')[0];
     var msg = 'Dear developer, thank you for celebrating our marriage! ♥\n'
-            + 'With love, ' + gn + ' ♥ ' + bn;
+      + 'With love, ' + gn + ' ♥ ' + bn;
     var mono = 'font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace';
     console.log(
       '%c' + art + '\n\n%c' + msg,
       'color:#39d353;' + mono + ';font-size:12px;line-height:1.25',
       'color:#e5c07b;' + mono + ';font-size:13px;font-weight:700;line-height:1.6'
     );
-  } catch (e) {}
+  } catch (e) { }
 })();

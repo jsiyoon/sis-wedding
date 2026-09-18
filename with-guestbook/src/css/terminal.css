@@ -585,6 +585,12 @@ section { padding: 30px 0 6px; }
   border-color: var(--err);
 }
 
+/* 축하 한마디는 2줄 높이 textarea다. Enter로 줄바꿔 볼 수 있다(전송 시엔 공백으로 정리). */
+.rsvp-textarea {
+  resize: none;
+  line-height: 1.4;
+}
+
 .rsvp-btn {
   margin-top: 12px;
   padding: 14px 22px;

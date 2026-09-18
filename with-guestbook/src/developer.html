@@ -246,7 +246,9 @@
         <div>&nbsp;&nbsp;<span class="k">"hall"</span>: <span class="v">"{{VENUE_HALL}}"</span>,</div>
         <div>&nbsp;&nbsp;<span class="k">"address"</span>: <span class="v">"{{VENUE_ADDRESS_FULL}}"</span>,</div>
         <div>&nbsp;&nbsp;<span class="k">"bus"</span>: [</div>
-        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">"{{VENUE_SUBWAY}}"<br />"{{INFO_WALK}}"</span></div>
+        <div>&nbsp;&nbsp;&nbsp;&nbsp;<span class="v">"{{VENUE_SUBWAY}}"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;"전주역 103-2, 337, 119번 이용"<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;"고속버스터미널 1001, 1002번 이용"<br /></span></div>
         <div>&nbsp;&nbsp;]</div>
         <div>}</div>
       </div>
@@ -265,7 +267,7 @@
       <div class="envblock rv d3">
         <div><span class="c"># 버스 — bus</span></div>
         <div class="v">{{INFO_BUS}}</div>
-        <div class="v">{{INFO_BUS}}</div>
+        <div class="v">{{INFO_WALK}}</div>
       </div>
 
       <div class="envblock rv d3">
@@ -316,10 +318,10 @@
         <input class="deploy-input" id="deployName" type="text" maxlength="12" placeholder="git config user.name"
           autocomplete="off" required />
       </div>
-      <div class="deploy-line rv d3">
+      <div class="deploy-line deploy-line-textarea rv d3">
         <span class="deploy-prompt" aria-hidden="true">$</span>
-        <input class="deploy-input" id="deployInput" type="text" maxlength="50" placeholder="echo '축하 한마디' (최대 50자)"
-          autocomplete="off" />
+        <textarea class="deploy-input deploy-textarea" id="deployInput" maxlength="50" rows="2"
+          placeholder="echo '축하 한마디' (최대 50자)" autocomplete="off"></textarea>
       </div>
       <p class="input-hint rv d3">// 축하 메시지를 입력하지 않으시면 랜덤 메시지가 발송됩니다</p>
       <button class="deploy-btn rv d3" id="deployBtn" type="button">$ approve --deploy wedding</button>

@@ -689,7 +689,7 @@ async function sendApproval() {
   const nameInput = document.getElementById('deployName');
   const input = document.getElementById('deployInput');
   const name = ((nameInput && nameInput.value) || '').trim();
-  const message = ((input && input.value) || '').trim();
+  const message = collapseLines(((input && input.value) || '')).trim();
 
   try {
     // API가 없는 정적 배포면 network를 거치지 않고 바로 이 browser에만 남긴다.

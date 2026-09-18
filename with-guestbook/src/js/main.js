@@ -387,7 +387,7 @@ function renderBlessings(count, recent) {
   resolveAutoMsgs(recent, BLESS_MSGS).forEach((it) => {
     const line = document.createElement('div');
     line.className = 'bl-line';
-    line.innerHTML = `<div class="bl-row"><b class="bl-name">${esc(it.name || '익명')}</b><span class="ts">[${timeAgo(it.ts)}]</span></div><div class="bl-msg">${esc(it.msg)}</div>`;
+    line.innerHTML = `<div class="bl-row"><b class="bl-name">${esc(it.name || '익명')}</b><span class="ts">${timeAgo(it.ts)}</span></div><div class="bl-msg">${esc(it.msg)}</div>`;
     blLines.appendChild(line);
   });
 
@@ -432,7 +432,7 @@ async function sendBlessing() {
   const nameInput = document.getElementById('blessName');
   const input = document.getElementById('blessInput');
   const name = ((nameInput && nameInput.value) || '').trim();
-  const message = ((input && input.value) || '').trim();
+  const message = collapseLines(((input && input.value) || '')).trim();
 
   try {
     // API가 없는 정적 배포면 network를 거치지 않고 바로 이 browser에만 남긴다.

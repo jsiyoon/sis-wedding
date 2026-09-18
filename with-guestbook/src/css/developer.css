@@ -1536,6 +1536,12 @@ details.gift .acc-list {
   border-color: var(--red);
 }
 
+/* 축하 한마디는 2줄 높이 textarea다. Enter로 줄바꿔 볼 수 있다(전송 시엔 공백으로 정리). */
+.deploy-textarea {
+  resize: none;
+  line-height: 1.4;
+}
+
 .deploy-btn {
   margin-top: 14px;
   padding: 16px 24px;

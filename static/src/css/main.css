@@ -920,6 +920,14 @@ details.gift .acc-list {
   border-color: #c0392b;
 }
 
+/* 축하 한마디는 2줄 높이 textarea다. Enter로 줄바꿔 볼 수 있고(전송 시엔 공백으로 정리),
+   여러 줄이라 가운데 정렬 대신 왼쪽 정렬이 읽기 편하다. */
+.bless-textarea {
+  resize: none;
+  line-height: 1.4;
+  text-align: left;
+}
+
 .bless-btn {
   margin-top: 8px;
   padding: 17px 38px;
