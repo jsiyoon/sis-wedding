@@ -928,6 +928,11 @@ details.gift .acc-list {
   text-align: left;
 }
 
+/* 이름 입력칸도 축하 한마디(textarea)와 같이 좌측 정렬로 맞춘다. */
+.bless-input-name {
+  text-align: left;
+}
+
 .bless-btn {
   margin-top: 8px;
   padding: 17px 38px;
