@@ -380,7 +380,7 @@ function renderBlessings(count, recent) {
 
   if (!recent.length) {
     blLines.innerHTML =
-      '<div class="bl-line">아직 기록이 없어요. 첫 번째 축하를 남겨주세요!</div>';
+      '<div class="bl-line">축하 메시지를 남겨주세요!</div>';
   }
 
   // 빈 msg는 자동 문구로 채우되 '직전 2개'와 안 겹치게(config.js resolveAutoMsgs). 렌더는 최신순 유지.
