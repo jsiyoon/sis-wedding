@@ -1014,12 +1014,26 @@ details.gift .acc-list {
   border-top: 1px dashed var(--line-soft);
 }
 
+/* 이름은 맨 왼쪽, 날짜는 맨 오른쪽 끝에 붙인다. */
+.bless-log .bl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
 .bless-log .bl-line .ts {
+  flex: 0 0 auto;
+  font-size: 13px;
   color: var(--rose);
 }
 
 .bless-log .bl-line .bl-name {
   color: var(--ink-bright);
+}
+
+.bless-log .bl-msg {
+  margin-top: 2px;
 }
 
 /* '더보기'. scroll 영역 안, 목록 맨 끝에 붙어 끝까지 내려야 보인다. */
