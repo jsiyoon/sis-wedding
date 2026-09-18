@@ -705,10 +705,7 @@ function cleanMessage(s) {
   var out = '';
   for (var i = 0; i < s.length; i++) {
     var c = s.charCodeAt(i);
-    if (c === 0x0a) { out += s.charAt(i); continue; }                         // 줄바꿈(Enter)은 입력 중엔 그대로 둔다.
-    // 실제로 보낼 때는 sendBlessing 등에서 공백으로 바꾸고, server도 다시 그렇게 정리한다
-    // (developer/terminal의 한 줄 로그 표시가 깨지지 않게).
-    if (c < 0x20 || (c >= 0x7f && c <= 0x9f)) continue;                       // 나머지 제어문자(C0, C1)
+    if (c < 0x20 || (c >= 0x7f && c <= 0x9f)) continue;                       // 제어문자(C0, C1). 줄바꿈(Enter)도 막는다.
     if (c === 0x200b || c === 0x200c || c === 0x200e || c === 0x200f ||
       (c >= 0x202a && c <= 0x202e) || c === 0x2060 || c === 0xfeff) continue; // zero-width, 방향제어(BIDI)
     out += s.charAt(i);
