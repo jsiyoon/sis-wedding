@@ -246,11 +246,6 @@
       <div class="label-title rv">축하 전하기</div>
 
       <!-- '마음 전하실 곳'의 안내문(.gift-note)과 글씨체, 색, 자간, 하단 간격(22px)을 맞춘다. -->
-      <p class="gift-note rv">
-        버튼 한 번이면 충분해요.<br />
-        저희에게 큰 힘이 됩니다.
-      </p>
-
       <input class="bless-input rv d1" id="blessName" type="text" maxlength="12" placeholder="이름" autocomplete="off"
         required />
       <input class="bless-input rv d1" id="blessInput" type="text" maxlength="50" placeholder="축하 한마디 (최대 50자)"
@@ -259,12 +254,11 @@
       <button class="bless-btn rv d1" id="blessBtn" type="button">축하의 마음 전하기 ❀</button>
       <div class="bless-msg" id="blessMsg"></div>
 
-      <!-- 축하 기록. 목록(.bl-lines)만 세로로 scroll하고, 합계(.bl-total)는 항상 보이도록
-         scroll 영역 밖에 둔다. 처음에는 20건(shared의 APPROVAL_PAGE_SIZE)만 받고, 목록 맨 끝의
-         '더보기'를 누르면 20건씩 이어 붙는다(config.js의 loadMoreApprovals). -->
+      <!-- 축하 기록. 목록(.bl-lines)만 세로로 scroll한다. 처음에는 20건(shared의
+         APPROVAL_PAGE_SIZE)만 받고, 목록 맨 끝의 '더보기'를 누르면 20건씩 이어 붙는다
+         (config.js의 loadMoreApprovals). -->
       <div class="bless-log rv d2">
         <div class="bl-lines" id="blLines"></div>
-        <div class="bl-total" id="blTotal"></div>
       </div>
     </section>
 

@@ -327,7 +327,6 @@ document.getElementById('copyAddr').addEventListener('click', (e) => {
  */
 
 const blLines = document.getElementById('blLines');
-const blTotal = document.getElementById('blTotal');
 // 표시 개수는 config.js의 스토어가 20건 단위로 관리한다. 여기서는 받아둔 만큼 전부 그린다.
 // box 높이는 css .bl-lines 의 max-height 가 잡고, 넘치면 scroll된다.
 
@@ -407,7 +406,6 @@ function renderBlessings(count, recent) {
   }
 
   blLines.scrollTop = keepScroll;
-  blTotal.innerHTML = `지금까지 <b>${count.toLocaleString()}</b>번의 축하를 받았어요`;
 }
 
 function readDemo() {
